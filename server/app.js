@@ -6,7 +6,7 @@ const http = require('http');
 const morgan = require('morgan');
 const path = require('path');
 const mongoose = require('mongoose');
-
+require('dotenv').config();
 
 /**
  * Routes
@@ -31,7 +31,7 @@ app.use('/', express.static(path.join(__dirname, '../dist/bcrs')));
 const port = process.env.PORT || 3000; // server port
 
 //mongo db connection with username and password to access database
-const conn = 'mongodb+srv://admin:test@cluster0.huc6fck.mongodb.net/react-crud';
+const conn = process.env.MONGODB_URI;
 
 /**
  * Database connection
