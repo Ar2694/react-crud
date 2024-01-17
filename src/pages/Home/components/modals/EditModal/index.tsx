@@ -133,7 +133,6 @@ export default function EditModal(props: any) {
                         helperText={validation["firstname"] === 0 ? "First Name is required" : ""}
                     />
                     <TextField
-
                         className="modal-text-field"
                         label="Last Name"
                         variant="standard"
