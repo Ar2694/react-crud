@@ -7,7 +7,6 @@ const morgan = require('morgan');
 const path = require('path');
 const mongoose = require('mongoose');
 require('dotenv').config();
-
 /**
  * Routes
  */
