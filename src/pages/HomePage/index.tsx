@@ -1,5 +1,5 @@
 //Global
-import React, { useState } from "react";
+import { useState } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button, Container } from "@mui/material";
-import DeleteModal from "./components/modals/DeleteModal/";
+import DeleteModal from "./components/modals/DeleteModal";
 import EditModal from "./components/modals/EditModal";
 import CreateModal from "./components/modals/CreateModal";
 import BaseLayout from "../../shared/containers/BaseLayout";

@@ -17,7 +17,6 @@ router.get("/", async (req, res) => {
     await User.find({})
       .where("isDisabled")
       .equals(false)
-      .exec()
       .then((user) => {
         const findAllResponse = new BaseResponse(200, "Query Successful", user);
         return res.json(findAllResponse.toObject());

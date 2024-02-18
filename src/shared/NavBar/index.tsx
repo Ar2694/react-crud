@@ -8,7 +8,13 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Button color="inherit">Login</Button>
+          <Button 
+          component="a"
+            href="/login" 
+            color="inherit"
+          >
+            Login
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>

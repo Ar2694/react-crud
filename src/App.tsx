@@ -1,9 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { teal, blueGrey } from '@mui/material/colors';
-import { HomePage } from "./pages/Home";
+import { HomePage } from "./pages/HomePage";
 
 import "./App.css";
+import LoginPage from "./pages/LoginPage";
 
 const theme = createTheme({
   palette: {
@@ -17,6 +18,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
