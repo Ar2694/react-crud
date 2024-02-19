@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,10 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import LoginService from '../../api/services/LoginService';
+import useSignIn from 'react-auth-kit/hooks/useSignIn';
+import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 
 function Copyright(props: any) {
   return (
@@ -30,14 +34,56 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function LoginPage() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const signIn = useSignIn()
+  const navigate = useNavigate();
+  const isAuthenticated = useIsAuthenticated()
+
+
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
+    const loginInfo = {
+      username: data.get('username'),
       password: data.get('password'),
-    });
+    }
+
+    await LoginService.login(loginInfo).then((res) => {
+
+      if (res.data) {
+        console.log(res.token, "token");
+        if (signIn({
+          auth: {
+            token: res.token,
+            type: 'Bearer'
+          },
+          refresh: res.data.refreshToken,
+          userState: { username: loginInfo.username }
+        })) { // Only if you are using refreshToken feature
+          // Redirect or do-something
+          console.log("Redirect")
+          navigate("/");
+        } else {
+          //Throw error
+          console.log("Error login")
+          navigate("/login");
+        }
+
+      } else {
+
+        navigate("/login");
+      }
+    })
+
+
   };
+
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/");
+    }
+  })
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -71,7 +117,7 @@ export default function LoginPage() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-             Login
+              Login
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField

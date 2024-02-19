@@ -7,10 +7,11 @@ class BaseResponse {
    * @param {*} data you can only return an actual data object or null; intended to help the UI handle requests
    */
 
-  constructor (httpCode, message, data) {
+  constructor (httpCode, message, data, token) {
     this.httpCode = httpCode;
     this.message = message;
     this.data = data;
+    this.token = token;
   }
 
   /**
@@ -24,7 +25,9 @@ class BaseResponse {
       "httpCode": this.httpCode,
       "message": this.message,
       "data": this.data,
+      "token": this.token || null,
       "timestamp": new Date().toLocaleDateString()
+      
     }
   }
 }

@@ -18,6 +18,7 @@ import { useUsersContext } from "../../contexts/UsersContext";
 import "./styles.css";
 
 export function HomePage() {
+
   const { users } = useUsersContext();
   const [createModal, setCreateModal] = useState(false);
   const [editModal, setEditModal] = useState({ user: {}, show: false });

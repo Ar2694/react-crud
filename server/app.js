@@ -11,11 +11,12 @@ require('dotenv').config();
  * Routes
  */
 const UserAPI = require('./routes/user-api');
+const LoginAPI = require('./routes/login-api');
 
 /**
  * App configurations
  */
-let app = express();
+const app = express();
 const cors = require("cors");
 app.use(express.json());
 app.use(express.urlencoded({'extended': true}));
@@ -45,6 +46,7 @@ mongoose.connect(conn).then(() => {
  * APIs
  */
 app.use('/api/user-model', UserAPI);
+app.use('/api/login-model', LoginAPI);
 
 
 /**
