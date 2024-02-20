@@ -4,8 +4,10 @@ import { teal, blueGrey } from '@mui/material/colors';
 import { HomePage } from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RequireAuth from '@auth-kit/react-router/RequireAuth';
+import RegisterPage from "./pages/RegisterPage";
 
 import "./App.css";
+
 
 const theme = createTheme({
   palette: {
@@ -28,6 +30,7 @@ export default function App() {
           />
           
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

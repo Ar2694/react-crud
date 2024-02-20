@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginService from '../../api/services/LoginService';
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
+import { FormHelperText } from '@mui/material';
 
 function Copyright(props: any) {
   return (
@@ -34,6 +35,7 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function LoginPage() {
+  const [error, setError] = useState(false);
   const signIn = useSignIn()
   const navigate = useNavigate();
   const isAuthenticated = useIsAuthenticated()
@@ -51,7 +53,6 @@ export default function LoginPage() {
     await LoginService.login(loginInfo).then((res) => {
 
       if (res.data) {
-        console.log(res.token, "token");
         if (signIn({
           auth: {
             token: res.token,
@@ -61,16 +62,15 @@ export default function LoginPage() {
           userState: { username: loginInfo.username }
         })) { // Only if you are using refreshToken feature
           // Redirect or do-something
-          console.log("Redirect")
+
           navigate("/");
         } else {
           //Throw error
-          console.log("Error login")
           navigate("/login");
         }
 
       } else {
-
+        setError(true);
         navigate("/login");
       }
     })
@@ -119,7 +119,9 @@ export default function LoginPage() {
             <Typography component="h1" variant="h5">
               Login
             </Typography>
+
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              {error ? <FormHelperText error>Invalid username or password.</FormHelperText> : ""}
               <TextField
                 margin="normal"
                 required
@@ -128,6 +130,7 @@ export default function LoginPage() {
                 label="Username"
                 name="username"
                 autoComplete="username"
+                error={error}
                 autoFocus
               />
               <TextField
@@ -138,12 +141,15 @@ export default function LoginPage() {
                 label="Password"
                 type="password"
                 id="password"
+                error={error}
                 autoComplete="current-password"
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
+
+
               <Button
                 type="submit"
                 fullWidth
@@ -159,9 +165,9 @@ export default function LoginPage() {
                   </Link> */}
                 </Grid>
                 <Grid item>
-                  {/* <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link> */}
+                  <Link href="/register" variant="body2">
+                    {"Create Account"}
+                  </Link>
                 </Grid>
               </Grid>
               <Copyright sx={{ mt: 5 }} />

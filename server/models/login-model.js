@@ -5,9 +5,11 @@ const SelectedSecurityQuestionSchema = require('../schemas/selected-security-que
 // login input fields below
 
 const loginSchema = new Schema ({
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
     username: { type: String, required: true, unique: true, dropDups: true },
     password: { type: String, required: true },
-    selectedSecurityQuestions: [SelectedSecurityQuestionSchema],
+
 }, { collection: 'login' });
 
 module.exports = mongoose.model('Login', loginSchema);

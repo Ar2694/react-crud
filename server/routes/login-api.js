@@ -76,17 +76,19 @@ router.post("/register", async (req, res) => {
         } else {
           // this will hash the password
           const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
-          console.log(req.body, "test", saltRounds);
+
 
           // this is going to be the login info
           const loginInfo = {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
             username: req.body.username,
             password: hashedPassword,
           };
-
+          console.log(loginInfo, "loginInfo", saltRounds);
           Login.create(loginInfo)
             .then((user) => {
-              console.log(user);
+        
               const registeredUserResponse = new BaseResponse("200", "Query Successful", user);
               return res.json(registeredUserResponse.toObject());
             })

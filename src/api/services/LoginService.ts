@@ -28,8 +28,37 @@ const login = async (login: Login | any) => {
         })
 }
 
+const register = async (user: any) => {
+    const newUser = {
+      firstname: user.firstname,
+      lastname: user.lastname,
+      username: user.username,
+      password: user.password,
+
+    }
+
+    return await fetch(`http://localhost:3000/api/login-model/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser)
+    })
+      .then((response) => {
+
+        return response.json();
+      })
+      .then((response) => {
+        console.log(response, "register response")
+        return response;
+      })
+      .catch((err) => {
+        return err;
+      })
+  }
 const LoginService = {
-    login
+    login,
+    register
   };
   
   export default LoginService;
