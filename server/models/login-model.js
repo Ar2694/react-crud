@@ -2,7 +2,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const SelectedSecurityQuestionSchema = require('../schemas/selected-security-question');
-// login input fields below
 
 const loginSchema = new Schema ({
     firstname: { type: String, required: true },

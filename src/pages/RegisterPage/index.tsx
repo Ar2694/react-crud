@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +11,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginService from '../../api/services/LoginService';
+import { FormHelperText } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import UserCreatedModal from './components/UserCreatedModal';
 
 const initUser = {
   firstname: "",
@@ -20,7 +23,6 @@ const initUser = {
 }
 
 const initValidation = {
-
   firstname: -1,
   lastname: -1,
   username: -1,
@@ -47,61 +49,56 @@ const defaultTheme = createTheme();
 export default function RegisterPage() {
   const [newUser, setNewUser] = useState(initUser);
   const [validation, setValidation] = useState(initValidation);
+  const [error, setError] = useState({ isError: false, message: "" });
+  const [userCreatedModal, setUserCreatedModal] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleForm = (e: any) => {
     const name = e.target.name;
     const value = e.target.value;
     if (value.trim().length > 0) {
-        setValidation((prev) => ({ ...prev, [name]: value ? 1 : -1 }));
+      setValidation((prev) => ({ ...prev, [name]: value ? 1 : -1 }));
     } else {
-        setValidation((prev) => ({ ...prev, [name]: 0 }));
+      setValidation((prev) => ({ ...prev, [name]: 0 }));
     }
     setNewUser((values: any) => ({ ...values, [name]: value }))
-}
-
-  const handleSubmit = (e: any) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    e.preventDefault();
-
-    if (value.trim().length > 0) {
-        setValidation((prev) => ({ ...prev, [name]: value ? 1 : -1 }));
-    } else {
-        setValidation((prev) => ({ ...prev, [name]: 0 }));
-    }
-    setNewUser((values: any) => ({ ...values, [name]: value }))
-}
-
-const handleCreate = () => {
-  verifyAll();
-}
-
-
-
-const verifyAll = async() => {
-  for (const [name, value] of Object.entries(validation)) {
-      if (value === -1) {
-          setValidation((prev) => ({ ...prev, [name]: value ? 0 : -1 }));
-      }
   }
-  if (Object.values(validation).some((value) => value !== 1)) {
+
+  const handleCreate = () => {
+    verifyAll();
+  }
+
+  const verifyAll = async () => {
+    for (const [name, value] of Object.entries(validation)) {
+      if (value === -1) {
+        setValidation((prev) => ({ ...prev, [name]: value ? 0 : -1 }));
+      }
+    }
+    if (Object.values(validation).some((value) => value !== 1)) {
       // TODO: if there is invalid value, do something here.
       console.log("error");
-  } else {
-      // if pass send data.
-      setNewUser(initUser);
-      setValidation(initValidation);
-      await LoginService.register(newUser);
-      console.log(newUser);
+    } else {
+
+      const result = await LoginService.register(newUser);
+
+      if (result.isError) {
+        setError({ isError: result.isError, message: result.message })
+      } else {
+        // if pass send data.
+        setNewUser(initUser);
+        setValidation(initValidation);
+        setUserCreatedModal(true);
+      }
+
+    }
   }
-}
-
-
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+
         <Box
           sx={{
             marginTop: 8,
@@ -116,7 +113,9 @@ const verifyAll = async() => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+          {error.isError ? <FormHelperText error>{error.message}</FormHelperText> : ""}
           <Box sx={{ mt: 3 }}>
+
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -178,7 +177,7 @@ const verifyAll = async() => {
               </Grid>
             </Grid>
             <Button
-      
+
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
@@ -196,6 +195,7 @@ const verifyAll = async() => {
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />
+        <UserCreatedModal userCreatedModal={userCreatedModal} setUserCreatedModal={setUserCreatedModal} />
       </Container>
     </ThemeProvider>
   );

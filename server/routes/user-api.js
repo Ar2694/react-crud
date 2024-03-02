@@ -1,8 +1,8 @@
 //require files to export
 const express = require("express");
 const User = require("../models/user-model.js");
-const BaseResponse = require("../services/base-response");
-const ErrorResponse = require("../services/error-response");
+const BaseResponse = require("../services/base-response.js");
+const ErrorResponse = require("../services/error-response.js");
 
 //It defines router variables - configuration
 const router = express.Router();
@@ -22,11 +22,11 @@ router.get("/", async (req, res) => {
         return res.json(findAllResponse.toObject());
       })
       .catch((err) => {
-        const findAllMongodbErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
+        const findAllMongodbErrorResponse = new ErrorResponse(500, "Internal Server Error", err.message);
         return res.status(500).send(findAllMongodbErrorResponse.toObject());
       });
   } catch (err) {
-    const findAllCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
+    const findAllCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", err.message);
     return res.status(500).send(findAllCatchErrorResponse.toObject());
   }
 });
@@ -114,6 +114,7 @@ router.put("/:id", async (req, res) => {
     return res.status(500).send(UpdateUserCatchErrorResponse.toObject());
   }
 });
+
 /**
  * DeleteUser API
  */

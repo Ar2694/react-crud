@@ -34,6 +34,7 @@ export default function DeleteModal(props: any) {
             show: !show
         });
     }
+    
     return (
         <Modal className="delete-modal" open={show}>
             <Box sx={style}>

@@ -60,9 +60,7 @@ export default function LoginPage() {
           },
           refresh: res.data.refreshToken,
           userState: { username: loginInfo.username }
-        })) { // Only if you are using refreshToken feature
-          // Redirect or do-something
-
+        })) {
           navigate("/");
         } else {
           //Throw error

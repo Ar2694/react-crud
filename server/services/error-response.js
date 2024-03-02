@@ -7,10 +7,11 @@ class ErrorResponse {
    * @param {*} data you can only return an actual data object or null; intended to help the UI handle requests
    */
 
-  constructor(httpCode, message, data) {
+  constructor(httpCode, message, data, isError) {
     this.httpCode = httpCode;
     this.message = message;
     this.data = data;
+    this.isError = isError
   }
 
   /**
@@ -22,7 +23,8 @@ class ErrorResponse {
       'httpCode': this.httpCode,
       'message': this.message,
       'data': this.data,
-      'timestamp': new Date().toLocaleDateString()
+      'timestamp': new Date().toLocaleDateString(),
+      "isError": this.isError || false
     }
   }
 }

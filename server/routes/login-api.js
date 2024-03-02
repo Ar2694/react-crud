@@ -25,13 +25,10 @@ router.post("/login", async (req, res) => {
         if (user) {
           const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
           if (passwordIsValid) {
-
             const jwtToken = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: 3600 });
             const loginResponse = new BaseResponse(200, "Login Successful!", user, jwtToken);
             return res.json(loginResponse.toObject());
-
           } else {
-            
             console.log(`Invalid password for username: ${user.username}`);
 
             const invalidPasswordResponse = new BaseResponse(401, "Invalid password. Please try again.", null);
@@ -71,12 +68,11 @@ router.post("/register", async (req, res) => {
         if (user) {
           //if username exists, this error will show
           console.log("The provided username already exists in our systems");
-          const userAlreadyExistsErrorResponse = new ErrorResponse("500", "User Already Exists", user);
+          const userAlreadyExistsErrorResponse = new ErrorResponse("500", "Username is already taken.", user, true);
           return res.status(500).send(userAlreadyExistsErrorResponse.toObject());
         } else {
           // this will hash the password
           const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
-
 
           // this is going to be the login info
           const loginInfo = {
@@ -88,7 +84,6 @@ router.post("/register", async (req, res) => {
           console.log(loginInfo, "loginInfo", saltRounds);
           Login.create(loginInfo)
             .then((user) => {
-        
               const registeredUserResponse = new BaseResponse("200", "Query Successful", user);
               return res.json(registeredUserResponse.toObject());
             })
@@ -111,6 +106,34 @@ router.post("/register", async (req, res) => {
     console.log(e);
     const registerCatchErrorResponse = new ErrorResponse("500", "Internal Server Error", e.message);
     return res.status(500).send(registerCatchErrorResponse.toObject());
+  }
+});
+
+/**
+ * ForgotPassword API
+ * http://localhost:3000/api/login-model/forgot-password
+ */
+router.put("/forgot-password", async (req, res) => {
+  try {
+    //filtering criteria to identify a record within MongoDB
+    await Login.findOne({ username: req.body.username }).then((user) => {
+      if (user) {
+        const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
+        console.log(user, "Then register user found");
+        return user
+          .set({
+            password: hashedPassword,
+          })
+          .save();
+      } else {
+        console.log("dammit");
+        const updateUserMongodbCatchrResponse = new ErrorResponse(500, "User does not exist!", null);
+        return res.status(500).send(updateUserMongodbCatchrResponse.toObject());
+      }
+    });
+  } catch (e) {
+    const UpdateUserCatchErrorResponse = new ErrorResponse(500, "Internal Server Error 135", e.message);
+    return res.status(500).send(UpdateUserCatchErrorResponse.toObject());
   }
 });
 
