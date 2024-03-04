@@ -36,7 +36,6 @@ router.post("/login", async (req, res) => {
           }
         } else {
           console.log(`username: ${req.body.username} is invalid`);
-
           const invalidUsernameResponse = new BaseResponse(401, `Invalid username. Please try again.`, null);
           return res.status(401).send(invalidUsernameResponse.toObject());
         }

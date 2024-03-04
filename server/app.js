@@ -23,8 +23,8 @@ app.use(express.json());
 app.use(express.urlencoded({'extended': true}));
 app.use(morgan('dev'));
 app.use(cors());
-app.use(express.static(path.join(__dirname, '../dist/bcrs')));
-app.use('/', express.static(path.join(__dirname, '../dist/bcrs')));
+app.use(express.static(path.join(__dirname, '../dist/react-crud')));
+app.use('/', express.static(path.join(__dirname, '../dist/react-crud')));
 
 /**
  * Ports
