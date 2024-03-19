@@ -1,3 +1,18 @@
-.home-page .button-container {
+.home-page .search-container {
     margin-bottom: 25px;
+}
+
+.home-page .button-container{
+    text-align: right;
+}
+.search-input {
+    background-color: white;
+    border-color: transparent;
+    border-radius: 4px;
+}
+
+.home-page fieldset{
+    border-color: transparent;
+    
+    border-radius: 4px;
 }

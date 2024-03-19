@@ -23,12 +23,11 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path={'/'} element={
-            <RequireAuth fallbackPath={'/login'}>
+
               <HomePage />
-            </RequireAuth>
+
           }
           />
-          
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Routes>

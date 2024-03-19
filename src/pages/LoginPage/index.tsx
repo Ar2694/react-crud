@@ -18,6 +18,7 @@ import useSignIn from 'react-auth-kit/hooks/useSignIn';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { FormHelperText } from '@mui/material';
 
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -38,16 +39,17 @@ export default function LoginPage() {
   const [error, setError] = useState(false);
   const signIn = useSignIn()
   const navigate = useNavigate();
-  const isAuthenticated = useIsAuthenticated()
+  const isAuthenticated = useIsAuthenticated();
 
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
     const loginInfo = {
-      username: data.get('username'),
-      password: data.get('password'),
+      username: data.get('username') as string,
+      password: data.get('password') as string,
     }
 
     await LoginService.login(loginInfo).then((res) => {
@@ -72,16 +74,7 @@ export default function LoginPage() {
         navigate("/login");
       }
     })
-
-
   };
-
-
-  useEffect(() => {
-    if (isAuthenticated()) {
-      navigate("/");
-    }
-  })
 
   return (
     <ThemeProvider theme={defaultTheme}>
