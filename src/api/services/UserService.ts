@@ -31,6 +31,7 @@ const findUser = async (id: String): Promise<User[]> => {
     })
 }
 
+
 const deleteUser = async (id: String): Promise<User[]> => {
   return await fetch(`http://localhost:3000/api/user-model/${id}`, {
     method: "DELETE"
@@ -103,7 +104,8 @@ const UserService = {
   findUser,
   deleteUser,
   createUser,
-  updateUser
+  updateUser,
+  
 };
 
 export default UserService;

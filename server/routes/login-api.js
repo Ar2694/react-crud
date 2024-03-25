@@ -29,28 +29,43 @@ router.post("/login", async (req, res) => {
             const loginResponse = new BaseResponse(200, "Login Successful!", user, jwtToken);
             return res.json(loginResponse.toObject());
           } else {
-            console.log(`Invalid password for username: ${user.username}`);
-
             const invalidPasswordResponse = new BaseResponse(401, "Invalid password. Please try again.", null);
             return res.status(401).send(invalidPasswordResponse.toObject());
           }
         } else {
-          console.log(`username: ${req.body.username} is invalid`);
           const invalidUsernameResponse = new BaseResponse(401, `Invalid username. Please try again.`, null);
           return res.status(401).send(invalidUsernameResponse.toObject());
         }
       })
 
       .catch((err) => {
-        console.log(err);
-
         const loginMongodbErrorResponse = new ErrorResponse(500, "MongoDB Error", err);
         return res.status(500).send(loginMongodbErrorResponse.toObject());
       });
   } catch (e) {
-    console.log(e);
     const loginCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
     return res.status(500).send(loginCatchErrorResponse.toObject());
+  }
+});
+
+/**
+ * FindByUsername API
+ * http://localhost:3000/api/login-model/find-username
+ */
+router.post("/find-username", async (req, res) => {
+  try {
+    await Login.findOne({ username: req.body.username }).then((user) => {
+      if (user) {
+        const FindByUsernameResponse = new BaseResponse(200, "Query Successful", user);
+        return res.json(FindByUsernameResponse.toObject());
+      } else {
+        const FindByUsernameMongodbCatchrResponse = new ErrorResponse(500, "Username does not exist!", null);
+        return res.status(500).send(FindByUsernameMongodbCatchrResponse.toObject());
+      }
+    });
+  } catch (e) {
+    const FindByUsernameCatchErrorResponse = new ErrorResponse(500, "Internal Server Errorr", e.message);
+    return res.status(500).send(FindByUsernameCatchErrorResponse.toObject());
   }
 });
 
@@ -66,7 +81,6 @@ router.post("/register", async (req, res) => {
       .then((user) => {
         if (user) {
           //if username exists, this error will show
-          console.log("The provided username already exists in our systems");
           const userAlreadyExistsErrorResponse = new ErrorResponse("500", "Username is already taken.", user, true);
           return res.status(500).send(userAlreadyExistsErrorResponse.toObject());
         } else {
@@ -80,15 +94,12 @@ router.post("/register", async (req, res) => {
             username: req.body.username,
             password: hashedPassword,
           };
-          console.log(loginInfo, "loginInfo", saltRounds);
           Login.create(loginInfo)
             .then((user) => {
               const registeredUserResponse = new BaseResponse("200", "Query Successful", user);
               return res.json(registeredUserResponse.toObject());
             })
             .catch((err) => {
-              console.log(err, "catch test");
-
               const newLoginMongodbErrorResponse = new ErrorResponse("500", "Internal Server Error test", err);
               return res.status(500).send(newLoginMongodbErrorResponse.toObject());
             });
@@ -96,13 +107,10 @@ router.post("/register", async (req, res) => {
       })
 
       .catch((err) => {
-        console.log(err, "test");
-
         const registerMongodbErrorResponse = new ErrorResponse(500, "MongoDB Error", err);
         return res.status(500).send(registerMongodbErrorResponse.toObject());
       });
   } catch (e) {
-    console.log(e);
     const registerCatchErrorResponse = new ErrorResponse("500", "Internal Server Error", e.message);
     return res.status(500).send(registerCatchErrorResponse.toObject());
   }
@@ -118,14 +126,12 @@ router.put("/forgot-password", async (req, res) => {
     await Login.findOne({ username: req.body.username }).then((user) => {
       if (user) {
         const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
-        console.log(user, "Then register user found");
         return user
           .set({
             password: hashedPassword,
           })
           .save();
       } else {
-        console.log("dammit");
         const updateUserMongodbCatchrResponse = new ErrorResponse(500, "User does not exist!", null);
         return res.status(500).send(updateUserMongodbCatchrResponse.toObject());
       }

@@ -16,14 +16,36 @@ const login = async (login: Login) => {
     body: JSON.stringify(loginInfo)
   })
     .then((response) => {
-      console.log(response, "fetch")
       return response.json();
     })
     .then((response) => {
       return response;
     })
     .catch((err) => {
-      console.log(err, "fetch catch")
+      return err;
+    })
+}
+
+
+const findByUsername = async (username: string): Promise<any> => {
+
+  const loginInfo = {
+    username: username,
+  }
+  return await fetch("http://localhost:3000/api/login-model/find-username", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(loginInfo)
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
       return err;
     })
 }
@@ -45,11 +67,33 @@ const register = async (user: any) => {
     body: JSON.stringify(newUser)
   })
     .then((response) => {
-
       return response.json();
     })
     .then((response) => {
-      console.log(response, "register response")
+      return response;
+    })
+    .catch((err) => {
+      return err;
+    })
+}
+const resetPassword = async (user: any) => {
+  const userInfo = {
+    username: user.username,
+    password: user.password,
+
+  }
+
+  return await fetch(`http://localhost:3000/api/login-model/forgot-password`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userInfo)
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((response) => {
       return response;
     })
     .catch((err) => {
@@ -58,7 +102,9 @@ const register = async (user: any) => {
 }
 const LoginService = {
   login,
-  register
+  register,
+  resetPassword,
+  findByUsername
 };
 
 export default LoginService;

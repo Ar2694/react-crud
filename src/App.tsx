@@ -1,18 +1,22 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { teal, blueGrey } from '@mui/material/colors';
+import { blueGrey } from '@mui/material/colors';
 import { HomePage } from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import RequireAuth from '@auth-kit/react-router/RequireAuth';
 import RegisterPage from "./pages/RegisterPage";
 
 import "./App.css";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 
 const theme = createTheme({
   palette: {
-    primary: teal,
-    secondary: blueGrey,
+    primary: {
+      main: '#006064'
+    },
+    secondary: {
+      main: blueGrey[500]
+    },
   },
 });
 
@@ -22,19 +26,13 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path={'/'} element={
-
-              <HomePage />
-
-          }
-          />
+          <Route path={'/'} element={ <HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot" element={<ForgotPasswordPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-
-
   )
 }
 

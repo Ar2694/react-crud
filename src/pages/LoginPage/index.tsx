@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -24,7 +24,7 @@ function Copyright(props: any) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Arlix Sorto
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -151,9 +151,9 @@ export default function LoginPage() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  {/* <Link href="#" variant="body2">
+                  <Link href="/forgot" variant="body2">
                     Forgot password?
-                  </Link> */}
+                  </Link>
                 </Grid>
                 <Grid item>
                   <Link href="/register" variant="body2">
