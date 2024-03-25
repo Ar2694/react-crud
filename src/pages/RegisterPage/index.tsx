@@ -77,7 +77,6 @@ export default function RegisterPage() {
     }
     if (Object.values(validation).some((value) => value !== 1)) {
       // TODO: if there is invalid value, do something here.
-      log("error");
     } else {
 
       const result = await LoginService.register(newUser);
