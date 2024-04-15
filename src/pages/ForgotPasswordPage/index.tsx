@@ -12,12 +12,15 @@ import LoginService from '../../api/services/LoginService';
 
 import "./styles.css";
 import { FormHelperText } from "@mui/material";
+import ResetConfirmModal from "./components/ResetConfirmModal";
+
 
 const defaultTheme = createTheme();
 
 export default function ForgotPasswordPage() {
     const [user, setUser] = useState({ isFound: false, username: "" });
     const [usernameError, setUsernameError] = useState(false);
+
 
     const checkUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -102,6 +105,7 @@ function EnterNewPassword(props: any) {
     const [newPass, setNewPass] = useState(initPass);
     const [validation, setValidation] = useState(initValid);
     const [isMatch, setIsMatch] = useState(false);
+    const [resetConfirmModal, setResetConfirmModal] = useState(false);
 
     const handleForm = (e: any) => {
         const name = e.target.name;
@@ -126,19 +130,30 @@ function EnterNewPassword(props: any) {
                 setValidation((prev) => ({ ...prev, [name]: value ? 0 : -1 }));
             }
         }
+
+        console.log(newPass.newPass === newPass.confirmPass)
+        console.log(Object.values(validation).every((value) => value === 1))
         if (Object.values(validation).every((value) => value === 1)) {
+          
             if (newPass.newPass === newPass.confirmPass) {
+               
                 const userInfo = {
                     username: props.user.username,
                     password: newPass.newPass
                 }
-                
-                await LoginService.resetPassword(userInfo);
+                console.log("validatefdd",newPass)
+               LoginService.resetPassword(userInfo);
+       
                 setIsMatch(false);
+                setResetConfirmModal(true);
+                console.log("validated here",newPass)
 
             } else {
                 setIsMatch(true);
+                console.log("not validated")
             }
+        }else{
+            console.log("broken")
         }
     }
 
@@ -182,6 +197,7 @@ function EnterNewPassword(props: any) {
             >
                 Confirm
             </Button>
+            <ResetConfirmModal resetConfirmModal={resetConfirmModal} setResetConfirmModal={setResetConfirmModal} />
         </Box>
 
     )

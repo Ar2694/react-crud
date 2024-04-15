@@ -7,6 +7,7 @@ import RegisterPage from "./pages/RegisterPage";
 
 import "./App.css";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import UsersProvider from "./contexts/UsersContext";
 
 
 const theme = createTheme({
@@ -26,7 +27,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path={'/'} element={ <HomePage />} />
+          <Route path={'/'} element={    <UsersProvider> <HomePage /></UsersProvider>} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot" element={<ForgotPasswordPage />} />

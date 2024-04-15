@@ -7,7 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from "@mui/material";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteModal from '../../modals/DeleteModal';
 import EditModal from '../../modals/EditModal';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
@@ -15,17 +15,21 @@ import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 
 export default function UsersTable(props: any) {
   const data = props.data ?? [];
-  const [editModal, setEditModal] = useState({ user: {}, show: false });
-  const [deleteModal, setDeleteModal] = useState({ id: "", show: false });
+  const update = props.update;
+  const [editModal, setEditModal] = useState({ user: {}, show: false, setUpdate: props.setUpdate });
+  const [deleteModal, setDeleteModal] = useState({ id: "", show: false, setUpdate: props.setUpdate });
   const isAuthenticated = useIsAuthenticated();
 
   const handleEdit = async (user: any) => {
-    setEditModal({ user: user, show: !editModal.show })
+    setEditModal({ user: user, show: !editModal.show, setUpdate: props.setUpdate })
   }
 
   const handleDelete = (id: any) => {
-    setDeleteModal({ id: id, show: !deleteModal.show })
+    setDeleteModal({ id: id, show: !deleteModal.show, setUpdate: props.setUpdate})
   }
+  useEffect(()=>{
+    console.log(data, "data")
+  },[update])
 
   return (
     <TableContainer component={Paper} >

@@ -23,7 +23,7 @@ function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" >
         Arlix Sorto
       </Link>{' '}
       {new Date().getFullYear()}
@@ -43,7 +43,7 @@ export default function LoginPage() {
 
 
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
@@ -52,7 +52,7 @@ export default function LoginPage() {
       password: data.get('password') as string,
     }
 
-    await LoginService.login(loginInfo).then((res) => {
+    LoginService.login(loginInfo).then((res) => {
 
       if (res.data) {
         if (signIn({

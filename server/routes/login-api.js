@@ -125,6 +125,7 @@ router.put("/forgot-password", async (req, res) => {
     //filtering criteria to identify a record within MongoDB
     await Login.findOne({ username: req.body.username }).then((user) => {
       if (user) {
+        console.log(user, "user")
         const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
         return user
           .set({
@@ -137,7 +138,7 @@ router.put("/forgot-password", async (req, res) => {
       }
     });
   } catch (e) {
-    const UpdateUserCatchErrorResponse = new ErrorResponse(500, "Internal Server Error 135", e.message);
+    const UpdateUserCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
     return res.status(500).send(UpdateUserCatchErrorResponse.toObject());
   }
 });

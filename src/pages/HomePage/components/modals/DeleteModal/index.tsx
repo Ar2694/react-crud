@@ -19,12 +19,12 @@ const style = {
 
 export default function DeleteModal(props: any) {
     const { deteteUser } = useUsersContext();
-    const { id, show } = props.deleteModal;
+    const { id, show, setUpdate } = props.deleteModal;
     const setDeleteModal = props.setDeleteModal;
 
     const handleDelete = () => {
         deteteUser(id);
-
+        setUpdate((prev:any) => !prev);
         setDeleteModal({
             show: !show
         });

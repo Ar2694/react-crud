@@ -1,21 +1,30 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, Grid, TextField } from "@mui/material";
 import CreateModal from "./components/modals/CreateModal";
 import BaseLayout from "../../shared/containers/BaseLayout";
-import { useUsersContext } from "../../contexts/UsersContext";
+import UsersProvider, { useUsersContext } from "../../contexts/UsersContext";
 import { User } from "../../interfaces/UserInterface";
 import UsersTable from "./components/Tables/UserTable";
 
 //Styles
 import "./styles.css";
+import UserService from "../../api/services/UserService";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
 
 export function HomePage() {
 
-  const { users } = useUsersContext();
+  // const { users } = useUsersContext();
   const [createModal, setCreateModal] = useState(false);
   const [searched, setSearched] = useState("");
+  const [users, setUsers] = useState<User[]>([]);
 
+ const isAuthenticated = useIsAuthenticated();
+
+  const getUsers = async () => {
+    const findUsers = await UserService.findAllUsers();
+    setUsers(findUsers);
+}
   const handleCreate = () => {
     setCreateModal(!createModal)
   }
@@ -27,8 +36,6 @@ export function HomePage() {
 
   const query = (users: User[]) => {
     return users.filter((user) => {
-
-      
       return !searched.length ||
         user.firstname.toString().toLowerCase().includes(searched.toString().toLowerCase()) ||
         user.lastname.toString().toLowerCase().includes(searched.toString().toLowerCase()) ||
@@ -38,19 +45,28 @@ export function HomePage() {
     })
   }
 
+  useEffect(()=>{
+    getUsers();
+  },[])
+ 
 
   return (
+
+
     <BaseLayout className="home-page">
       <Grid container alignItems="center" justifyContent="center" className="search-container">
         <Grid item xs>
           <TextField placeholder="Search" onChange={handleSearch} variant="outlined" fullWidth className="search-input" />
         </Grid>
-        <Grid item xs={2} className="button-container">
+        {isAuthenticated() ? <Grid item xs={2} className="button-container">
           <Button variant="contained" color="secondary" onClick={handleCreate}>Create User</Button>
-        </Grid>
+        </Grid> : null}
+      
       </Grid>
       <UsersTable data={query(users)} />
-      <CreateModal createModal={createModal} setCreateModal={setCreateModal} />
+      <CreateModal createModal={createModal} setCreateModal={setCreateModal}/>
     </BaseLayout>
+
+
   )
 }
