@@ -30,7 +30,7 @@ export default function Navbar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             React CRUD
           </Typography>
-          {isAuthenticated()
+          {isAuthenticated
             ?
             <>
               <Typography className="welcome-message" sx={{ flexGrow: 1 }}>Welcome, {username}!</Typography>

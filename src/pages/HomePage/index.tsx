@@ -10,6 +10,7 @@ import UsersTable from "./components/Tables/UserTable";
 import "./styles.css";
 import UserService from "../../api/services/UserService";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+import  UserAPI  from "../../api/services/UserAPI";
 
 
 export function HomePage() {
@@ -21,10 +22,8 @@ export function HomePage() {
 
  const isAuthenticated = useIsAuthenticated();
 
-  const getUsers = async () => {
-    const findUsers = await UserService.findAllUsers();
-    setUsers(findUsers);
-}
+  const getUsers = UserAPI.getUser();
+
   const handleCreate = () => {
     setCreateModal(!createModal)
   }
@@ -58,7 +57,7 @@ export function HomePage() {
         <Grid item xs>
           <TextField placeholder="Search" onChange={handleSearch} variant="outlined" fullWidth className="search-input" />
         </Grid>
-        {isAuthenticated() ? <Grid item xs={2} className="button-container">
+        {isAuthenticated ? <Grid item xs={2} className="button-container">
           <Button variant="contained" color="secondary" onClick={handleCreate}>Create User</Button>
         </Grid> : null}
       

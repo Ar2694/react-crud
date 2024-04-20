@@ -42,7 +42,7 @@ export default function UsersTable(props: any) {
             <TableCell>Address</TableCell>
             <TableCell>Email</TableCell>
 
-            {isAuthenticated() ?
+            {isAuthenticated ?
               <>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
@@ -61,7 +61,7 @@ export default function UsersTable(props: any) {
                 <TableCell>{user.phoneNumber}</TableCell>
                 <TableCell>{user.address}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                {isAuthenticated() ?
+                {isAuthenticated?
                   <>
                     <TableCell><Button onClick={() => { handleEdit(user) }}>Edit</Button></TableCell>
                     <TableCell><Button onClick={() => { handleDelete(user._id) }}>Delete</Button></TableCell>
