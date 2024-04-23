@@ -28,12 +28,12 @@ export default function UsersProvider({ children }: UsersProviderProps) {
     const [users, setUsers] = useState<User[]>([]);
 
     const findAllUsers = async () => {
-        const findUsers = await UserService.findAllUsers();
+        const findUsers = await UserService.getUsers();
         setUsers(findUsers);
     }
 
     const findUser = async (id: string) => {
-        return await UserService.findUser(id);
+        return await UserService.findAUser(id);
     }
 
     const deteteUser = async (id: string) => {
@@ -43,13 +43,13 @@ export default function UsersProvider({ children }: UsersProviderProps) {
 
     const createUser = async (user: User) => {
         await UserService.createUser(user);
-        const newUsers = await UserService.findAllUsers();
+        const newUsers = await UserService.getUsers();
         setUsers(newUsers);
     }
 
     const updateUser = async (user: User) => {
         await UserService.updateUser(user);
-        const newUsers = await UserService.findAllUsers();
+        const newUsers = await UserService.getUsers();
         setUsers(newUsers);
     }
 

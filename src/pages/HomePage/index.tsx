@@ -8,9 +8,9 @@ import UsersTable from "./components/Tables/UserTable";
 
 //Styles
 import "./styles.css";
-import UserService from "../../api/services/UserService";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
-import  UserAPI  from "../../api/services/UserAPI";
+
+import UserService from "../../api/services/UserService";
 
 
 export function HomePage() {
@@ -19,10 +19,15 @@ export function HomePage() {
   const [createModal, setCreateModal] = useState(false);
   const [searched, setSearched] = useState("");
   const [users, setUsers] = useState<User[]>([]);
-
+  
  const isAuthenticated = useIsAuthenticated();
 
-  const getUsers = UserAPI.getUser();
+
+
+  const test =  async() => {
+    const getUser = await UserService.getUsers();
+    setUsers(getUser)
+  }
 
   const handleCreate = () => {
     setCreateModal(!createModal)
@@ -45,7 +50,7 @@ export function HomePage() {
   }
 
   useEffect(()=>{
-    getUsers();
+    test();
   },[])
  
 

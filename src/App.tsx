@@ -9,7 +9,6 @@ import "./App.css";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import UsersProvider from "./contexts/UsersContext";
 
-
 const theme = createTheme({
   palette: {
     primary: {
