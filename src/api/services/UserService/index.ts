@@ -8,7 +8,7 @@ export default class UserService {
   static getUsers = async () => {
     return APIClient.get("/api/user-model/")
       .then((response) => {
-        return response.data;
+        return response;
       })
       .catch((err) => {
         return err;
@@ -19,7 +19,7 @@ export default class UserService {
   static findAUser = async (id: string) => {
     return APIClient.get(`/api/user-model/${id}`)
       .then((response) => {
-        return response.data;
+        return response;
       })
       .catch((err) => {
         return err;

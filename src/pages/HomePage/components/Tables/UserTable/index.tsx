@@ -15,11 +15,12 @@ import { usePageContext } from '../../../../../contexts/PageContext';
 
 
 export default function UsersTable(props: any) {
-  const {state} = usePageContext()?? {};
+  const {state, getUsers} = usePageContext();
+const users = getUsers;
 
 
- 
-  console.log(state)
+ console.log(users)
+  console.log(usePageContext())
   const data = props.data ?? [];
   const update = props.update;
   const [editModal, setEditModal] = useState({ user: {}, show: false, setUpdate: props.setUpdate });
@@ -60,8 +61,8 @@ export default function UsersTable(props: any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.length > 0
-            ? data.map((user: any) => (
+          {users.length > 0
+            ? users.map((user: any) => (
               <TableRow key={user._id}>
                 <TableCell>{user.firstname}</TableCell>
                 <TableCell>{user.lastname}</TableCell>

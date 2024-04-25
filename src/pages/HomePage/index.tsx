@@ -56,6 +56,7 @@ export function HomePage() {
   },[])
 
 const events ={
+  getUsers:  UserService.getUsers().then(res=> {return res}),
   test: (evt:any)=>{
     console.log(1)
     return true;

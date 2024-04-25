@@ -11,30 +11,25 @@ const PageContext = React.createContext<any | null>(null);
 
 // create user provider
 export default function PageProvider(props:any) {
-    const [state, setState] = useState({});
-const test =props.events ??{}
-const setEvents = props.events ? props.events : {};
+    const [state, setPageState] = useState({});
+
 
 
    const init = ()=>{
-    const eventss = Object.keys(setEvents).reduce((item) => {
-       return item
-     
-      });
-      setState((prev) => ({ ...prev, eventss})); 
+    const events = props.events instanceof Object ? props.events  : {};
+
+      const init ={
+        useState: [state, setPageState],
+        ...events
+    }
+    return init;
+
    }
 
     const context = {
-   
-        state,
-        users: [],
-  
+         ...init()
     }
-   
-    useEffect(()=>{
-        init();
-
-    },[])
+  
     return (
         <PageContext.Provider value={context}>
             {props.children}
