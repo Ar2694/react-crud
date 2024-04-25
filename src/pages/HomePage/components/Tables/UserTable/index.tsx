@@ -11,9 +11,15 @@ import { useEffect, useState } from "react";
 import DeleteModal from '../../modals/DeleteModal';
 import EditModal from '../../modals/EditModal';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
+import { usePageContext } from '../../../../../contexts/PageContext';
 
 
 export default function UsersTable(props: any) {
+  const {state} = usePageContext()?? {};
+
+
+ 
+  console.log(state)
   const data = props.data ?? [];
   const update = props.update;
   const [editModal, setEditModal] = useState({ user: {}, show: false, setUpdate: props.setUpdate });
@@ -33,6 +39,7 @@ export default function UsersTable(props: any) {
 
   return (
     <TableContainer component={Paper} >
+      <Button >Edit</Button>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>

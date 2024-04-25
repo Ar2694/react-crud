@@ -11,6 +11,8 @@ import "./styles.css";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
 import UserService from "../../api/services/UserService";
+import UsersContext from "../../contexts/UsersContext";
+import PageProvider from "../../contexts/PageContext";
 
 
 export function HomePage() {
@@ -52,12 +54,23 @@ export function HomePage() {
   useEffect(()=>{
     test();
   },[])
+
+const events ={
+  test: (evt:any)=>{
+    console.log(1)
+    return true;
+  },
+  testTwo: ()=>{
+    console.log(2)
+    return true;
+  }
+}
  
 
   return (
 
-
-    <BaseLayout className="home-page">
+    <PageProvider events={events}>
+       <BaseLayout className="home-page">
       <Grid container alignItems="center" justifyContent="center" className="search-container">
         <Grid item xs>
           <TextField placeholder="Search" onChange={handleSearch} variant="outlined" fullWidth className="search-input" />
@@ -70,6 +83,8 @@ export function HomePage() {
       <UsersTable data={query(users)} />
       <CreateModal createModal={createModal} setCreateModal={setCreateModal}/>
     </BaseLayout>
+    </PageProvider>
+   
 
 
   )
