@@ -10,26 +10,19 @@ interface UsersProviderProps {
 const PageContext = React.createContext<any | null>(null);
 
 // create user provider
-export default function PageProvider(props:any) {
-    const [state, setPageState] = useState({});
+export default function PageProvider(props: any) {
+    const [page, setPage] = useState({});
 
-
-
-   const init = ()=>{
-    const events = props.events instanceof Object ? props.events  : {};
-
-      const init ={
-        useState: [state, setPageState],
-        ...events
-    }
-    return init;
-
-   }
+    const init = (page: any, setPage: any) => ({
+        functions: props.functions instanceof Function ? props.functions(page, setPage) : () => { },
+        page,
+        setPage
+    })
 
     const context = {
-         ...init()
+        ...init(page, setPage)
     }
-  
+
     return (
         <PageContext.Provider value={context}>
             {props.children}

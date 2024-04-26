@@ -4,19 +4,18 @@ import APIClient from "../../APIClient";
 
 export default class UserService {
 
+  static init() {
+    return new UserService();
+  }
+
   // getUsers
-  static getUsers = async () => {
-    return APIClient.get("/api/user-model/")
-      .then((response) => {
-        return response;
-      })
-      .catch((err) => {
-        return err;
-      })
+  getUsers = async () => {
+    const get = await APIClient.get("/api/user-model/")
+    return get.data;
   }
 
   // findAUser
-  static findAUser = async (id: string) => {
+  findAUser = async (id: string) => {
     return APIClient.get(`/api/user-model/${id}`)
       .then((response) => {
         return response;
@@ -27,7 +26,7 @@ export default class UserService {
   }
 
   // deleteUser
-  static deleteUser = async (id: string) => {
+  deleteUser = async (id: string) => {
     return APIClient.delete(`/api/user-model/${id}`)
       .then((response) => {
         return response.data;
@@ -39,7 +38,7 @@ export default class UserService {
   }
 
   // createUser
-  static createUser = async (user: User) => {
+  createUser = async (user: User) => {
     const newUser = {
       firstname: user.firstname,
       lastname: user.lastname,
@@ -58,7 +57,7 @@ export default class UserService {
   }
 
   //updateUser
-  static updateUser = async (user: User) => {
+  updateUser = async (user: User) => {
     const updateUser = {
       firstname: user.firstname,
       lastname: user.lastname,

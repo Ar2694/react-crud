@@ -26,7 +26,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path={'/'} element={    <UsersProvider> <HomePage /></UsersProvider>} />
+          <Route path={'/'} element={  <HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot" element={<ForgotPasswordPage />} />

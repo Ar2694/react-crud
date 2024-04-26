@@ -12,24 +12,41 @@ import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
 import UserService from "../../api/services/UserService";
 import UsersContext from "../../contexts/UsersContext";
-import PageProvider from "../../contexts/PageContext";
+import PageProvider, { usePageContext } from "../../contexts/PageContext";
 
 
 export function HomePage() {
 
-  // const { users } = useUsersContext();
+  const functions = (page: any, setPage: any) => ({
+    getUsers: async () => {
+      const users: Promise<any> = await UserService.init().getUsers()
+      console.log(users)
+      setPage((prev: any) => ({ ...prev, users }));
+    },
+    updateUsers: async () => {
+      console.log(page)
+
+      const users: any = [];
+      setPage((prev: any) => ({ ...prev, users }));
+    }
+  })
+
+  return (
+    <PageProvider functions={functions}>
+      <Home />
+    </PageProvider>
+  )
+}
+
+function Home(props: any) {
+  const {functions, page} = usePageContext();
+  const {updateUsers, getUsers} = functions;
+
+const users = page.users ?? [];
   const [createModal, setCreateModal] = useState(false);
   const [searched, setSearched] = useState("");
-  const [users, setUsers] = useState<User[]>([]);
-  
- const isAuthenticated = useIsAuthenticated();
 
-
-
-  const test =  async() => {
-    const getUser = await UserService.getUsers();
-    setUsers(getUser)
-  }
+  const isAuthenticated = useIsAuthenticated();
 
   const handleCreate = () => {
     setCreateModal(!createModal)
@@ -41,7 +58,9 @@ export function HomePage() {
   }
 
   const query = (users: User[]) => {
-    return users.filter((user) => {
+
+
+     const search = users.filter((user) => {
       return !searched.length ||
         user.firstname.toString().toLowerCase().includes(searched.toString().toLowerCase()) ||
         user.lastname.toString().toLowerCase().includes(searched.toString().toLowerCase()) ||
@@ -49,29 +68,11 @@ export function HomePage() {
         user.address.toString().toLowerCase().includes(searched.toString().toLowerCase()) ||
         user.phoneNumber.toString().toLowerCase().includes(searched.toString().toLowerCase());
     })
+    console.log(users, "query", searched,  search)
+    return search;
   }
-
-  useEffect(()=>{
-    test();
-  },[])
-
-const events ={
-  getUsers:  UserService.getUsers().then(res=> {return res}),
-  test: (evt:any)=>{
-    console.log(1)
-    return true;
-  },
-  testTwo: ()=>{
-    console.log(2)
-    return true;
-  }
-}
- 
-
   return (
-
-    <PageProvider events={events}>
-       <BaseLayout className="home-page">
+    <BaseLayout className="home-page">
       <Grid container alignItems="center" justifyContent="center" className="search-container">
         <Grid item xs>
           <TextField placeholder="Search" onChange={handleSearch} variant="outlined" fullWidth className="search-input" />
@@ -79,14 +80,10 @@ const events ={
         {isAuthenticated ? <Grid item xs={2} className="button-container">
           <Button variant="contained" color="secondary" onClick={handleCreate}>Create User</Button>
         </Grid> : null}
-      
+
       </Grid>
       <UsersTable data={query(users)} />
-      <CreateModal createModal={createModal} setCreateModal={setCreateModal}/>
+      <CreateModal createModal={createModal} setCreateModal={setCreateModal} />
     </BaseLayout>
-    </PageProvider>
-   
-
-
   )
 }

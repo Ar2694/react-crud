@@ -15,13 +15,13 @@ import { usePageContext } from '../../../../../contexts/PageContext';
 
 
 export default function UsersTable(props: any) {
-  const {state, getUsers} = usePageContext();
-const users = getUsers;
 
+  const {functions, page} = usePageContext();
+  const {updateUsers, getUsers} = functions;
 
- console.log(users)
-  console.log(usePageContext())
-  const data = props.data ?? [];
+  console.log(page, "test", usePageContext())
+
+  const users = props.data?? [];
   const update = props.update;
   const [editModal, setEditModal] = useState({ user: {}, show: false, setUpdate: props.setUpdate });
   const [deleteModal, setDeleteModal] = useState({ id: "", show: false, setUpdate: props.setUpdate });
@@ -30,17 +30,17 @@ const users = getUsers;
   const handleEdit = async (user: any) => {
     setEditModal({ user: user, show: !editModal.show, setUpdate: props.setUpdate })
   }
-
+ 
   const handleDelete = (id: any) => {
     setDeleteModal({ id: id, show: !deleteModal.show, setUpdate: props.setUpdate})
   }
   useEffect(()=>{
-    console.log(data, "data")
-  },[update])
+    getUsers();
+  },[])
 
   return (
     <TableContainer component={Paper} >
-      <Button >Edit</Button>
+      <Button onClick={updateUsers}>Edit</Button>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
