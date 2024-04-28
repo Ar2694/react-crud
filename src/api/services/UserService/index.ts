@@ -14,6 +14,12 @@ export default class UserService {
     return get.data;
   }
 
+    // getUsers
+    searchUsers = async (query: any) => {
+      const get = await APIClient.get(`/api/user-model/search/${query}`)
+      return get.data;
+    }
+
   // findAUser
   findAUser = async (id: string) => {
     return APIClient.get(`/api/user-model/${id}`)

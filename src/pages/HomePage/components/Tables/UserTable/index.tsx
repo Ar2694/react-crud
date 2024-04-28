@@ -12,16 +12,16 @@ import DeleteModal from '../../modals/DeleteModal';
 import EditModal from '../../modals/EditModal';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { usePageContext } from '../../../../../contexts/PageContext';
+import { useSearchParams } from 'react-router-dom';
 
 
 export default function UsersTable(props: any) {
-
-  const {functions, page} = usePageContext();
-  const {updateUsers, getUsers} = functions;
+  const {functions, page, users} = usePageContext();
+  const {updateUsers, getUsers, searchUsers} = functions;
 
   console.log(page, "test", usePageContext())
 
-  const users = props.data?? [];
+  const data = page.users?? [];
   const update = props.update;
   const [editModal, setEditModal] = useState({ user: {}, show: false, setUpdate: props.setUpdate });
   const [deleteModal, setDeleteModal] = useState({ id: "", show: false, setUpdate: props.setUpdate });
@@ -61,8 +61,8 @@ export default function UsersTable(props: any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.length > 0
-            ? users.map((user: any) => (
+          {data.length > 0
+            ? data.map((user: any) => (
               <TableRow key={user._id}>
                 <TableCell>{user.firstname}</TableCell>
                 <TableCell>{user.lastname}</TableCell>

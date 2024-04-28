@@ -13,11 +13,20 @@ import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import UserService from "../../api/services/UserService";
 import UsersContext from "../../contexts/UsersContext";
 import PageProvider, { usePageContext } from "../../contexts/PageContext";
+import { useSearchParams } from "react-router-dom";
 
 
 export function HomePage() {
 
   const functions = (page: any, setPage: any) => ({
+    searchUsers: async(evt:any)=>{
+      const search = evt.target.value ?? "";
+      console.log(search, "search")
+      const users: Promise<any> = await UserService.init().searchUsers(search)
+      console.log(users)
+      setPage((prev: any) => ({ ...prev, users }));
+  
+    },
     getUsers: async () => {
       const users: Promise<any> = await UserService.init().getUsers()
       console.log(users)
@@ -39,8 +48,9 @@ export function HomePage() {
 }
 
 function Home(props: any) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const {functions, page} = usePageContext();
-  const {updateUsers, getUsers} = functions;
+  const {searchUsers} =functions;
 
 const users = page.users ?? [];
   const [createModal, setCreateModal] = useState(false);
@@ -52,37 +62,18 @@ const users = page.users ?? [];
     setCreateModal(!createModal)
   }
 
-  const handleSearch = (evt: any) => {
-    const value = evt.target.value;
-    setSearched(value);
-  }
-
-  const query = (users: User[]) => {
-
-
-     const search = users.filter((user) => {
-      return !searched.length ||
-        user.firstname.toString().toLowerCase().includes(searched.toString().toLowerCase()) ||
-        user.lastname.toString().toLowerCase().includes(searched.toString().toLowerCase()) ||
-        user.email.toString().toLowerCase().includes(searched.toString().toLowerCase()) ||
-        user.address.toString().toLowerCase().includes(searched.toString().toLowerCase()) ||
-        user.phoneNumber.toString().toLowerCase().includes(searched.toString().toLowerCase());
-    })
-    console.log(users, "query", searched,  search)
-    return search;
-  }
   return (
     <BaseLayout className="home-page">
       <Grid container alignItems="center" justifyContent="center" className="search-container">
         <Grid item xs>
-          <TextField placeholder="Search" onChange={handleSearch} variant="outlined" fullWidth className="search-input" />
+          <TextField placeholder="Search" name="search" onChange={searchUsers} variant="outlined" fullWidth className="search-input" />
         </Grid>
         {isAuthenticated ? <Grid item xs={2} className="button-container">
           <Button variant="contained" color="secondary" onClick={handleCreate}>Create User</Button>
         </Grid> : null}
 
       </Grid>
-      <UsersTable data={query(users)} />
+      <UsersTable data={[]} />
       <CreateModal createModal={createModal} setCreateModal={setCreateModal} />
     </BaseLayout>
   )

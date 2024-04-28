@@ -37,7 +37,12 @@ const conn = process.env.MONGODB_URI;
 /**
  * Database connection
  */
-mongoose.connect(conn).then(() => {
+
+mongoose.connect(conn,{
+  dbName:"react-crud",
+  user: process.env.MONGODB_USERNAME,
+  pass: process.env.MONGODB_PASSWORD
+}).then(() => {
   console.debug(`Connection to the database instance was successful`);
 }).catch(err => {
   console.log(`MongoDB Error: ${err.message}`)

@@ -3,6 +3,7 @@ const express = require("express");
 const User = require("../models/user-model.js");
 const BaseResponse = require("../services/base-response.js");
 const ErrorResponse = require("../services/error-response.js");
+const userPipeline = require("../pipelines/user-pipeline.js");
 
 //It defines router variables - configuration
 const router = express.Router();
@@ -15,8 +16,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     await User.find({})
-      .where("isDisabled")
-      .equals(false)
+ 
       .then((user) => {
         const findAllResponse = new BaseResponse(200, "Query Successful", user);
         return res.json(findAllResponse.toObject());
@@ -54,6 +54,28 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+/**
+ * FindBySearch API
+ */
+router.get("/search/:query", async (req, res) => {
+  const query = req.params.query;
+  console.log(req.params.query);
+  try {
+    // Searches the database for the correct API
+    await User.aggregate(userPipeline(query))
+      .then((user) => {
+        const findByIdResponse = new BaseResponse(200, "Query Successful", user);
+        return res.json(findByIdResponse.toObject());
+      })
+      .catch((err) => {
+        const findByIdMongodbErrorResponse = new ErrorResponse(500, "Internal Server Error", err);
+        return res.status(500).send(findByIdMongodbErrorResponse.toObject());
+      });
+  } catch (e) {
+    const findByIdCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
+    res.status(500).send(findByIdCatchErrorResponse.toObject());
+  }
+});
 // ============================================================================================================================
 /**
  *  CreateUser API
@@ -142,6 +164,5 @@ router.delete("/:id", async (req, res) => {
     res.status(500).send(DeleteUserCatchErrorResponse.toObject());
   }
 });
-
 
 module.exports = router;

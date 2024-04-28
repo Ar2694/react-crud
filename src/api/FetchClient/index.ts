@@ -7,8 +7,6 @@ interface HttpOptions {
   cache?: any
 }
 
-
-
 export default class FetchClient {
   static resp: Response;
   static respBody: any;
@@ -16,7 +14,6 @@ export default class FetchClient {
   static async createRequest(url: string, options: HttpOptions): Promise<any> {
     try {
       const { method, httpHeader, data, cache } = options;
-
       const requestInit: RequestInit = { method };
 
       if (cache) {

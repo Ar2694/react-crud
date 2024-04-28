@@ -1,6 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import UserService from "../api/services/UserService";
-import { User } from "../interfaces/UserInterface";
+import React, { useContext, useState } from "react";
 
 // Props typefor UsersProviderProps
 interface UsersProviderProps {
@@ -14,7 +12,7 @@ export default function PageProvider(props: any) {
     const [page, setPage] = useState({});
 
     const init = (page: any, setPage: any) => ({
-        functions: props.functions instanceof Function ? props.functions(page, setPage) : () => { },
+        functions: props.functions instanceof Function ? props.functions(page, setPage) : () => {},
         page,
         setPage
     })
