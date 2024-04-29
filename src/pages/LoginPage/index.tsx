@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -76,6 +76,11 @@ export default function LoginPage() {
     })
   };
 
+  useEffect(()=>{
+    if(isAuthenticated){
+      navigate("/");
+    }
+  },[])
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>

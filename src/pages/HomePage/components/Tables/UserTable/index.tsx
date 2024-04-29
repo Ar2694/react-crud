@@ -12,17 +12,13 @@ import DeleteModal from '../../modals/DeleteModal';
 import EditModal from '../../modals/EditModal';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { usePageContext } from '../../../../../contexts/PageContext';
-import { useSearchParams } from 'react-router-dom';
 
 
 export default function UsersTable(props: any) {
-  const {functions, page, users} = usePageContext();
-  const {updateUsers, getUsers, searchUsers} = functions;
+  const {functions, page} = usePageContext();
+  const {updateUsers, getUsers} = functions;
+  const data = page.users ?? [];
 
-  console.log(page, "test", usePageContext())
-
-  const data = page.users?? [];
-  const update = props.update;
   const [editModal, setEditModal] = useState({ user: {}, show: false, setUpdate: props.setUpdate });
   const [deleteModal, setDeleteModal] = useState({ id: "", show: false, setUpdate: props.setUpdate });
   const isAuthenticated = useIsAuthenticated();

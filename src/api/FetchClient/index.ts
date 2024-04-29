@@ -28,10 +28,12 @@ export default class FetchClient {
       }
 
       this.resp = await fetch(url, requestInit);
-      console.log(this.resp, "createRequest")
+      
       if(this.resp.ok){
+
         this.respBody = await this.resp.json();
         return this;
+        
       }else{
         throw new Error(this.resp.status + " " +this.resp.statusText)
       }
@@ -42,10 +44,9 @@ export default class FetchClient {
     }
   }
 
-
   static statusCode(): HttpStatusCode {
     const statusCode = this.resp.status as StatusCode;
-    const statusText = (StatusCode[this.resp.status] as unknown) as StatusCode;
+    const statusText = (StatusCode[this.resp.status] as any) as StatusCode;
 
     return {
       statusCode,

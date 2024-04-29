@@ -8,23 +8,53 @@ const userPipeline = require("../pipelines/user-pipeline.js");
 //It defines router variables - configuration
 const router = express.Router();
 
-// each API will go through this route -> http://localhost:3000/api/user-model
+// Each API will go through this route -> http://localhost:3000/api/user-model
+
+// ============================================================================================================================
+
+/**
+ * FindBySearch API
+ */
+router.get("/search/", async (req, res) => {
+  try {
+    const users = await User.find({});
+    const findBySearchResponse = new BaseResponse(200, "Query Successful", users);
+
+    return res.json(findBySearchResponse.toObject());
+    
+  } catch (e) {
+    const findBySearchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
+    return res.status(500).send(findBySearchErrorResponse.toObject());
+  }
+});
+
+router.get("/search/:query", async (req, res) => {
+  try {
+    const query = req.params.query;
+    const pipeline = userPipeline(query);
+    const users = await User.aggregate(pipeline);
+    const findBySearchResponse = new BaseResponse(200, "Query Successful", users);
+
+    return res.json(findBySearchResponse.toObject());
+
+  } catch (e) {
+    const findBySearchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
+    return res.status(500).send(findBySearchErrorResponse.toObject());
+  }
+});
+
+// ============================================================================================================================
 
 /**
  * FindAll API
  */
 router.get("/", async (req, res) => {
   try {
-    await User.find({})
- 
-      .then((user) => {
-        const findAllResponse = new BaseResponse(200, "Query Successful", user);
-        return res.json(findAllResponse.toObject());
-      })
-      .catch((err) => {
-        const findAllMongodbErrorResponse = new ErrorResponse(500, "Internal Server Error", err.message);
-        return res.status(500).send(findAllMongodbErrorResponse.toObject());
-      });
+    const users = await User.find({});
+    const findAllResponse = new BaseResponse(200, "Query Successful", users);
+
+    return res.json(findAllResponse.toObject());
+
   } catch (err) {
     const findAllCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", err.message);
     return res.status(500).send(findAllCatchErrorResponse.toObject());
@@ -38,44 +68,17 @@ router.get("/", async (req, res) => {
  */
 router.get("/:id", async (req, res) => {
   try {
-    // Searches the database for the correct API
-    await User.findOne({ _id: req.params.id })
-      .then((user) => {
-        const findByIdResponse = new BaseResponse(200, "Query Successful", user);
-        return res.json(findByIdResponse.toObject());
-      })
-      .catch((err) => {
-        const findByIdMongodbErrorResponse = new ErrorResponse(500, "Internal Server Error", err);
-        return res.status(500).send(findByIdMongodbErrorResponse.toObject());
-      });
+    const users = await User.findOne({ _id: req.params.id });
+    const findByIdResponse = new BaseResponse(200, "Query Successful", users);
+
+    return res.json(findByIdResponse.toObject());
+
   } catch (e) {
     const findByIdCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
     res.status(500).send(findByIdCatchErrorResponse.toObject());
   }
 });
 
-/**
- * FindBySearch API
- */
-router.get("/search/:query", async (req, res) => {
-  const query = req.params.query;
-  console.log(req.params.query);
-  try {
-    // Searches the database for the correct API
-    await User.aggregate(userPipeline(query))
-      .then((user) => {
-        const findByIdResponse = new BaseResponse(200, "Query Successful", user);
-        return res.json(findByIdResponse.toObject());
-      })
-      .catch((err) => {
-        const findByIdMongodbErrorResponse = new ErrorResponse(500, "Internal Server Error", err);
-        return res.status(500).send(findByIdMongodbErrorResponse.toObject());
-      });
-  } catch (e) {
-    const findByIdCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
-    res.status(500).send(findByIdCatchErrorResponse.toObject());
-  }
-});
 // ============================================================================================================================
 /**
  *  CreateUser API
@@ -89,53 +92,44 @@ router.post("/", async (req, res) => {
       address: req.body.address,
       email: req.body.email,
     };
+    const user = await User.create(newUser);
+    const createUserResponse = new BaseResponse(200, "Query Successful", user);
 
-    await User.create(newUser)
-      .then((result) => {
-        const createUserResponse = new BaseResponse(200, "Query Successful", result);
-        return res.json(createUserResponse.toObject());
-      })
-      .catch((err) => {
-        const createUserErrorResponse = new ErrorResponse(500, "Internal Server Error", err);
-        return res.status(500).send(createUserErrorResponse.toObject());
-      });
+    return res.json(createUserResponse.toObject());
+
   } catch (err) {
     const createUserCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", err.message);
     return res.status(500).send(createUserCatchErrorResponse.toObject());
   }
 });
 
+// ============================================================================================================================
+
 /**
  * UpdateUser API
  */
 router.put("/:id", async (req, res) => {
   try {
-    //filtering criteria to identify a record within MongoDB
-    await User.findOne({ _id: req.params.id })
-      .then((user) => {
-        return user
-          .set({
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            phoneNumber: req.body.phoneNumber,
-            address: req.body.address,
-            email: req.body.email,
-          })
-          .save();
-      })
-      .then((user) => {
-        const updateUserResponse = new BaseResponse(200, "Query Successful", user);
-        return res.json(updateUserResponse.toObject());
-      })
-      .catch((err) => {
-        const updateUserMongodbErrorResponse = new ErrorResponse(500, "Internal Server Error", err);
-        return res.status(500).send(updateUserMongodbErrorResponse.toObject());
-      });
+    const updateUser = {
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      phoneNumber: req.body.phoneNumber,
+      address: req.body.address,
+      email: req.body.email,
+    };
+
+    const user = await User.updateOne({ _id: req.params.id }, updateUser);
+    const updateUserResponse = new BaseResponse(200, "Query Successful", user);
+
+    return res.json(updateUserResponse.toObject());
+
   } catch (e) {
     const UpdateUserCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
     return res.status(500).send(UpdateUserCatchErrorResponse.toObject());
   }
 });
+
+// ============================================================================================================================
 
 /**
  * DeleteUser API
@@ -143,25 +137,15 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     //filtering criteria to identify a record within MongoDB
-    await User.findOne({ _id: req.params.id })
-      .then((user) => {
-        User.deleteOne({ _id: user._id })
-          .then((user) => {
-            const DeleteUserResponse = new BaseResponse(200, "Query Successful", user);
-            return res.json(DeleteUserResponse.toObject());
-          })
-          .catch((err) => {
-            const DeleteUserDbErrorResponse = new ErrorResponse(500, "Internal Server Error", err);
-            return res.status(500).send(DeleteUserDbErrorResponse.toObject());
-          });
-      })
-      .catch((err) => {
-        const findByIdMongodbErrorResponse = new ErrorResponse(500, "Internal Server Error", err);
-        return res.status(500).send(findByIdMongodbErrorResponse.toObject());
-      });
+    const user = await User.findOne({ _id: req.params.id });
+    const result = await user.deleteOne();
+    const deleteUserResponse = new BaseResponse(200, "Query Successful", result);
+
+    return res.json(deleteUserResponse.toObject());
+
   } catch (e) {
-    const DeleteUserCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
-    res.status(500).send(DeleteUserCatchErrorResponse.toObject());
+    const deleteUserCatchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
+    res.status(500).send(deleteUserCatchErrorResponse.toObject());
   }
 });
 
