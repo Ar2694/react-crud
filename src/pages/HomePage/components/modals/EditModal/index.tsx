@@ -6,6 +6,8 @@ import Modal from '@mui/material/Modal';
 import { FormControl, Grid, TextField } from '@mui/material';
 import { useUsersContext } from '../../../../../contexts/UsersContext';
 import { User } from '../../../../../interfaces/UserInterface';
+import ModalProvider, { useModalContext } from '../../../../../contexts/ModalContext';
+import { usePageContext } from '../../../../../contexts/PageContext';
 
 
 const style = {
@@ -39,8 +41,30 @@ const initValidation: any = {
 }
 
 export default function EditModal(props: any) {
+    const button = props.button ?? <Button variant="text" color="secondary">Edit</Button>;
+    
+    const functions = (state: any, setState: any) => ({
+        editUser: () => {
+            console.log(props)
+        },
+        getUser: () => {
+            console.log("test me")
+        }
+    })
+    return (
+        <ModalProvider functions={functions} button={button}>
+            <EditModalContent />
+        </ModalProvider>
+    )
+}
+
+export function EditModalContent(props: any) {
+    const { modal, functions, toggle } = useModalContext();
+    const { getUser, editUser } = functions;
+    console.log(useModalContext(), "edit")
+    const { page } = usePageContext();
+    const { user } = page ?? {}
     const { updateUser } = useUsersContext();
-    const { user, show } = props.editModal;
     const setEditModal = props.setEditModal;
     const [validation, setValidation] = useState(initValidation);
     const [form, setForm] = useState(initUser);
@@ -85,7 +109,7 @@ export default function EditModal(props: any) {
         setEditModal({
 
             user: "",
-            show: !show
+
         });
         setForm(initUser);
         setValidation(initValidation);
@@ -105,17 +129,15 @@ export default function EditModal(props: any) {
             updateUser(form);
             setForm(initUser);
             setValidation(initValidation);
-            setEditModal({
-                show: !show
-            });
+
         }
     }
 
     useEffect(() => {
         initForm();
-    }, [show])
+    }, [])
     return (
-        <Modal className="modal delete-modal" open={show}>
+        <Modal className="modal delete-modal" open={modal}>
             <Box sx={style} >
                 <Typography id="id-id-title" variant='h5' gutterBottom={true}>
                     Edit User
@@ -176,10 +198,11 @@ export default function EditModal(props: any) {
                     />
                 </FormControl>
                 <Grid className="modal-button-container" columnGap={3} container direction="row" justifyContent="flex-end">
-                    <Button variant="text" color="secondary" onClick={handleCancel}>Cancel</Button>
-                    <Button variant="contained" onClick={handleEdit}>Edit</Button>
+                    <Button variant="text" color="secondary" onClick={toggle}>Cancel</Button>
+                    <Button variant="contained" onClick={editUser}>Edit</Button>
                 </Grid>
             </Box>
         </Modal>
+
     );
 }

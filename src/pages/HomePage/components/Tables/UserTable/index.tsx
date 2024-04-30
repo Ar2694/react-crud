@@ -67,7 +67,7 @@ export default function UsersTable(props: any) {
                 <TableCell>{user.email}</TableCell>
                 {isAuthenticated?
                   <>
-                    <TableCell><Button onClick={() => { handleEdit(user) }}>Edit</Button></TableCell>
+                    <TableCell><EditModal id={1}  /></TableCell>
                     <TableCell><Button onClick={() => { handleDelete(user._id) }}>Delete</Button></TableCell>
                   </>
                   : ""
@@ -83,7 +83,7 @@ export default function UsersTable(props: any) {
         </TableBody>
       </Table>
       <DeleteModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
-      <EditModal editModal={editModal} setEditModal={setEditModal} />
+
     </TableContainer>
   )
 }

@@ -1,6 +1,6 @@
 import { Container } from "@mui/material";
 import MainLayout from "../MainLayout";
-import Navbar from "../../NavBar";
+import Navbar from "../../ui/NavBar";
 
 
 export default function BaseLayout(props: any) {

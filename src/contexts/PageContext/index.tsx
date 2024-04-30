@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useReducer, useState } from "react";
 
 // Props typefor UsersProviderProps
 interface UsersProviderProps {
@@ -10,15 +10,11 @@ const PageContext = React.createContext<any | null>(null);
 // create user provider
 export default function PageProvider(props: any) {
     const [page, setPage] = useState({});
-
-    const init = (page: any, setPage: any) => ({
+    
+    const context = {
         functions: props.functions instanceof Function ? props.functions(page, setPage) : () => {},
         page,
         setPage
-    })
-
-    const context = {
-        ...init(page, setPage)
     }
 
     return (
