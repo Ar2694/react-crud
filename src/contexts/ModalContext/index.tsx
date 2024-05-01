@@ -5,7 +5,7 @@ const ModalContext = React.createContext<any | null>(null);
 
 export default function ModalProvider(props: any) {
     const [modal, setModal] = useState(false);
-    const [state, setState] = useState({});
+    const [state, setState] = useState("");
 
     const init = {
         functions: props.functions instanceof Function ? props.functions(state, setState) : {},
@@ -21,12 +21,16 @@ export default function ModalProvider(props: any) {
     }
 
     return (
-        <ModalContext.Provider value={context}>
-            {props.children}
-            {props.button 
-            ? React.cloneElement(props.button, { onClick: context.open }) 
-            : <Button variant="contained" onClick={context.open}>Open</Button>}
-        </ModalContext.Provider>
+        <>
+            {modal &&
+             <ModalContext.Provider value={context}>
+                    {props.children}
+                </ModalContext.Provider>}
+            {props.button
+                    ? React.cloneElement(props.button, { onClick: context.open })
+                    : <Button variant="contained" onClick={context.open}>Open</Button>}
+        </>
+
     );
 }
 

@@ -23,10 +23,6 @@ export default function UsersTable(props: any) {
   const [deleteModal, setDeleteModal] = useState({ id: "", show: false, setUpdate: props.setUpdate });
   const isAuthenticated = useIsAuthenticated();
 
-  const handleEdit = async (user: any) => {
-    setEditModal({ user: user, show: !editModal.show, setUpdate: props.setUpdate })
-  }
- 
   const handleDelete = (id: any) => {
     setDeleteModal({ id: id, show: !deleteModal.show, setUpdate: props.setUpdate})
   }
@@ -67,7 +63,7 @@ export default function UsersTable(props: any) {
                 <TableCell>{user.email}</TableCell>
                 {isAuthenticated?
                   <>
-                    <TableCell><EditModal id={1}  /></TableCell>
+                    <TableCell><EditModal {...user} /></TableCell>
                     <TableCell><Button onClick={() => { handleDelete(user._id) }}>Delete</Button></TableCell>
                   </>
                   : ""

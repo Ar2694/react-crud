@@ -8,6 +8,7 @@ import { useUsersContext } from '../../../../../contexts/UsersContext';
 import { User } from '../../../../../interfaces/UserInterface';
 import ModalProvider, { useModalContext } from '../../../../../contexts/ModalContext';
 import { usePageContext } from '../../../../../contexts/PageContext';
+import useForm, { hasLength } from '../../../../../shared/tools/useForm';
 
 
 const style = {
@@ -42,14 +43,28 @@ const initValidation: any = {
 
 export default function EditModal(props: any) {
     const button = props.button ?? <Button variant="text" color="secondary">Edit</Button>;
+
     
     const functions = (state: any, setState: any) => ({
+
+        onChange: (evt:any, form:any)=>{
+            const name=evt.target.name;
+            const value = evt.target.value;
+    
+            form.setForm((prev: any) => ({ ...prev, name:{...prev.name, [name]: value}}));
+
+            console.log(evt.target.value)
+
+            console.log(state, "test me")
+        },
+
         editUser: () => {
             console.log(props)
         },
-        getUser: () => {
-            console.log("test me")
-        }
+        setUser: () => {
+            setState(props);    
+        },
+        users: props
     })
     return (
         <ModalProvider functions={functions} button={button}>
@@ -59,83 +74,34 @@ export default function EditModal(props: any) {
 }
 
 export function EditModalContent(props: any) {
-    const { modal, functions, toggle } = useModalContext();
-    const { getUser, editUser } = functions;
-    console.log(useModalContext(), "edit")
+    const { modal, state, functions, toggle } = useModalContext();
+    const { setUser, editUser, onChange, users } = functions;
+
+    const editForm = useForm({
+        name: {...users},
+        validate: {
+            firstname: {
+                error:hasLength,
+                options: { min: 2, max: 10 }, 
+                message: 'Name must be 2-10 characters long'
+            },
+            lastname: hasLength({ min: 2, max: 10 }, 'Name must be 2-10 characters long'),
+            phoneNumber: hasLength({ min: 2, max: 10 }, 'Name must be 2-10 characters long'),
+            address: hasLength({ min: 2, max: 10 }, 'Name must be 2-10 characters long'),
+            email: hasLength({ min: 2, max: 10 }, 'Name must be 2-10 characters long'),
+        },
+      });
+
+      const {name} = editForm;
+      console.log(editForm, "name")
+      
+
+
+    // console.log(editForm, state,"edit")
     const { page } = usePageContext();
-    const { user } = page ?? {}
-    const { updateUser } = useUsersContext();
-    const setEditModal = props.setEditModal;
+
+
     const [validation, setValidation] = useState(initValidation);
-    const [form, setForm] = useState(initUser);
-
-    const initForm = () => {
-        const keysToInclude = Object.keys(initUser);
-        const filteredUser = Object.keys(user || {}).reduce((result: any, key) => {
-            if (keysToInclude.includes(key)) {
-                result[key] = user[key];
-            }
-            return result;
-        }, {});
-
-        for (const key of Object.keys(filteredUser)) {
-            if (filteredUser[key].length > 0) {
-                setValidation((prev: any) => ({ ...prev, [key]: filteredUser[key] ? 1 : -1 }));
-            } else {
-                setValidation((prev: any) => ({ ...prev, [key]: 0 }));
-            }
-        }
-        setForm(filteredUser)
-    }
-
-    const handleForm = (e: any) => {
-        const name = e.target.name;
-        const value = e.target.value;
-
-        if (value.trim().length > 0) {
-            setValidation((prev: any) => ({ ...prev, [name]: value ? 1 : -1 }));
-        } else {
-            setValidation((prev: any) => ({ ...prev, [name]: 0 }));
-        }
-
-        setForm((values: any) => ({ ...values, [name]: value }));
-    }
-
-    const handleEdit = () => {
-        verifySubmitEdit();
-    }
-
-    const handleCancel = () => {
-        setEditModal({
-
-            user: "",
-
-        });
-        setForm(initUser);
-        setValidation(initValidation);
-    }
-
-    const verifySubmitEdit = () => {
-
-        for (const [name, value] of Object.entries(validation)) {
-            if (value === -1) {
-                setValidation((prev: any) => ({ ...prev, [name]: value ? 0 : -1 }));
-            }
-        }
-        if (Object.values(validation).some((value) => value !== 1)) {
-            // TODO: if there is invalid value, do something.
-
-        } else {
-            updateUser(form);
-            setForm(initUser);
-            setValidation(initValidation);
-
-        }
-    }
-
-    useEffect(() => {
-        initForm();
-    }, [])
     return (
         <Modal className="modal delete-modal" open={modal}>
             <Box sx={style} >
@@ -149,8 +115,9 @@ export function EditModalContent(props: any) {
                         label="First Name"
                         variant="standard"
                         name="firstname"
-                        value={form.firstname || ""}
-                        onChange={handleForm}
+                        value={name.firstname}
+                     
+                        onChange={(e)=>{onChange(e,editForm)}}
                         error={validation["firstname"] === 0}
                         helperText={validation["firstname"] === 0 ? "First Name is required" : ""}
                     />
@@ -159,10 +126,10 @@ export function EditModalContent(props: any) {
                         label="Last Name"
                         variant="standard"
                         name="lastname"
-                        value={form.lastname || ""}
+                        value={name.lastname || ""}
                         error={validation["lastname"] === 0}
                         helperText={validation["lastname"] === 0 ? "Last Name is required" : ""}
-                        onChange={handleForm}
+                        onChange={(e)=>{onChange(e,editForm)}}
                     />
                     <TextField
 
@@ -172,18 +139,18 @@ export function EditModalContent(props: any) {
                         name="phoneNumber"
                         error={validation["phoneNumber"] === 0}
                         helperText={validation["phoneNumber"] === 0 ? "Phone number is required" : ""}
-                        value={form.phoneNumber || ""}
-                        onChange={handleForm}
+                        value={name.phoneNumber || ""}
+                        onChange={(e)=>{onChange(e,editForm)}}
                     />
                     <TextField
 
                         className="modal-text-field"
                         label="Address" variant="standard"
                         name="address"
-                        value={form.address || ""}
+                        value={name.address || ""}
                         error={validation["address"] === 0}
                         helperText={validation["address"] === 0 ? "Address is required" : ""}
-                        onChange={handleForm}
+                        onChange={(e)=>{onChange(e,editForm)}}
                     />
                     <TextField
 
@@ -191,10 +158,10 @@ export function EditModalContent(props: any) {
                         label="Email"
                         variant="standard"
                         name="email"
-                        value={form.email || ""}
+                        value={name.email || ""}
                         error={validation["email"] === 0}
                         helperText={validation["email"] === 0 ? "Email is required" : ""}
-                        onChange={handleForm}
+                        onChange={(e)=>{onChange(e,editForm)}}
                     />
                 </FormControl>
                 <Grid className="modal-button-container" columnGap={3} container direction="row" justifyContent="flex-end">
