@@ -8,7 +8,7 @@ import { useUsersContext } from '../../../../../contexts/UsersContext';
 import { User } from '../../../../../interfaces/UserInterface';
 import ModalProvider, { useModalContext } from '../../../../../contexts/ModalContext';
 import { usePageContext } from '../../../../../contexts/PageContext';
-import useForm, { hasLength } from '../../../../../shared/tools/useForm';
+import useForm, { hasLength, validateField, validateOnSubmit } from '../../../../../shared/tools/useForm';
 
 
 const style = {
@@ -23,46 +23,34 @@ const style = {
     p: 4,
 };
 
-const initUser: any = {
-    _id: "",
-    firstname: "",
-    lastname: "",
-    phoneNumber: "",
-    address: "",
-    email: ""
-}
-
-const initValidation: any = {
-    _id: -1,
-    firstname: -1,
-    lastname: -1,
-    phoneNumber: -1,
-    address: -1,
-    email: -1
-}
-
 export default function EditModal(props: any) {
     const button = props.button ?? <Button variant="text" color="secondary">Edit</Button>;
 
-    
+
     const functions = (state: any, setState: any) => ({
 
-        onChange: (evt:any, form:any)=>{
-            const name=evt.target.name;
-            const value = evt.target.value;
+        onSubmit:(e:any, editForm:any)=>{
+            const {name, validate } = editForm;
+            console.log(   validateOnSubmit(name, validate) , "onsubmut")
+        },
+        onChange: (evt: any, editForm: any) => {
+            const field = evt.target
+            const {validate, setForm } = editForm;
+
     
-            form.setForm((prev: any) => ({ ...prev, name:{...prev.name, [name]: value}}));
+            validateField(field, validate, setForm)
+            // console.log(editForm, "onchec")
 
-            console.log(evt.target.value)
+   
 
-            console.log(state, "test me")
+            // console.log(state, "test me")
         },
 
         editUser: () => {
             console.log(props)
         },
         setUser: () => {
-            setState(props);    
+            setState(props);
         },
         users: props
     })
@@ -75,33 +63,46 @@ export default function EditModal(props: any) {
 
 export function EditModalContent(props: any) {
     const { modal, state, functions, toggle } = useModalContext();
-    const { setUser, editUser, onChange, users } = functions;
+    const {onChange, users, onSubmit } = functions;
 
     const editForm = useForm({
-        name: {...users},
+        name: { ...users },
         validate: {
             firstname: {
-                error:hasLength,
-                options: { min: 2, max: 10 }, 
-                message: 'Name must be 2-10 characters long'
+                rule: hasLength,
+                options: { min: 1 },
+                isError: false,
+                message: "First name is required."
             },
-            lastname: hasLength({ min: 2, max: 10 }, 'Name must be 2-10 characters long'),
-            phoneNumber: hasLength({ min: 2, max: 10 }, 'Name must be 2-10 characters long'),
-            address: hasLength({ min: 2, max: 10 }, 'Name must be 2-10 characters long'),
-            email: hasLength({ min: 2, max: 10 }, 'Name must be 2-10 characters long'),
+            lastname: {
+                rule: hasLength,
+                options: { min: 1 },
+                isError: false,
+                message: "Last name is required."
+            },
+            phoneNumber: {
+                rule: hasLength,
+                options: { min: 1 },
+                isError: false,
+                message: "Phone number is required."
+            },
+            address: {
+                rule: hasLength,
+                options: { min: 1 },
+                isError: false,
+                message: "Address is required"
+            },
+            email: {
+                rule: hasLength,
+                options: { min: 1 },
+                isError: false,
+                message: "Email is required"
+            },
         },
-      });
+    });
 
-      const {name} = editForm;
-      console.log(editForm, "name")
-      
+    const { name, validate } = editForm;
 
-
-    // console.log(editForm, state,"edit")
-    const { page } = usePageContext();
-
-
-    const [validation, setValidation] = useState(initValidation);
     return (
         <Modal className="modal delete-modal" open={modal}>
             <Box sx={style} >
@@ -116,20 +117,20 @@ export function EditModalContent(props: any) {
                         variant="standard"
                         name="firstname"
                         value={name.firstname}
-                     
-                        onChange={(e)=>{onChange(e,editForm)}}
-                        error={validation["firstname"] === 0}
-                        helperText={validation["firstname"] === 0 ? "First Name is required" : ""}
+
+                        onChange={(e) => { onChange(e, editForm) }}
+                        error={validate.firstname.isError}
+                        helperText={validate.firstname.isError && validate.firstname.message}
                     />
                     <TextField
                         className="modal-text-field"
                         label="Last Name"
                         variant="standard"
                         name="lastname"
-                        value={name.lastname || ""}
-                        error={validation["lastname"] === 0}
-                        helperText={validation["lastname"] === 0 ? "Last Name is required" : ""}
-                        onChange={(e)=>{onChange(e,editForm)}}
+                        value={name.lastname}
+                        error={validate.lastname.isError}
+                        helperText={validate.lastname.isError&& validate.lastname.message}
+                        onChange={(e) => { onChange(e, editForm) }}
                     />
                     <TextField
 
@@ -137,20 +138,19 @@ export function EditModalContent(props: any) {
                         label="Phone Number"
                         variant="standard"
                         name="phoneNumber"
-                        error={validation["phoneNumber"] === 0}
-                        helperText={validation["phoneNumber"] === 0 ? "Phone number is required" : ""}
-                        value={name.phoneNumber || ""}
-                        onChange={(e)=>{onChange(e,editForm)}}
+                        error={validate.phoneNumber.isError}
+                        helperText={validate.phoneNumber.isError && validate.phoneNumber.message}
+                        value={name.phoneNumber}
+                        onChange={(e) => { onChange(e, editForm) }}
                     />
                     <TextField
-
                         className="modal-text-field"
                         label="Address" variant="standard"
                         name="address"
-                        value={name.address || ""}
-                        error={validation["address"] === 0}
-                        helperText={validation["address"] === 0 ? "Address is required" : ""}
-                        onChange={(e)=>{onChange(e,editForm)}}
+                        value={name.address}
+                        error={validate.address.isError}
+                        helperText={validate.address.isError && validate.address.message}
+                        onChange={(e) => { onChange(e, editForm) }}
                     />
                     <TextField
 
@@ -158,15 +158,15 @@ export function EditModalContent(props: any) {
                         label="Email"
                         variant="standard"
                         name="email"
-                        value={name.email || ""}
-                        error={validation["email"] === 0}
-                        helperText={validation["email"] === 0 ? "Email is required" : ""}
-                        onChange={(e)=>{onChange(e,editForm)}}
+                        value={name.email}
+                        error={validate.email.isError}
+                        helperText={validate.email.isError && validate.email.message}
+                        onChange={(e) => { onChange(e, editForm) }}
                     />
                 </FormControl>
                 <Grid className="modal-button-container" columnGap={3} container direction="row" justifyContent="flex-end">
                     <Button variant="text" color="secondary" onClick={toggle}>Cancel</Button>
-                    <Button variant="contained" onClick={editUser}>Edit</Button>
+                    <Button variant="contained" onClick={(e) => { onSubmit(e, editForm) }}>Edit</Button>
                 </Grid>
             </Box>
         </Modal>
