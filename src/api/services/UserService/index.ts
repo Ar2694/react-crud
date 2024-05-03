@@ -14,21 +14,16 @@ export default class UserService {
     return get.data;
   }
 
-    // getUsers
-    searchUsers = async (query: any) => {
-      const get = await APIClient.get(`/api/user-model/search/${query}`)
-      return get.data;
-    }
+  // getUsers
+  searchUsers = async (query: any) => {
+    const get = await APIClient.get(`/api/user-model/search/${query}`)
+    return get.data;
+  }
 
   // findAUser
   findAUser = async (id: string) => {
-    return APIClient.get(`/api/user-model/${id}`)
-      .then((response) => {
-        return response;
-      })
-      .catch((err) => {
-        return err;
-      })
+    const get = await APIClient.get(`/api/user-model/${id}`)
+    return get.data;
   }
 
   // deleteUser
@@ -72,13 +67,9 @@ export default class UserService {
       email: user.email
     }
 
-    return APIClient.put(`/api/user-model/${user._id}`, updateUser)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((err) => {
-        return err;
-      })
+    const put= await APIClient.put(`/api/user-model/${user._id}`, updateUser)
+    
+    console.log(put, "update user")
   }
 
 }

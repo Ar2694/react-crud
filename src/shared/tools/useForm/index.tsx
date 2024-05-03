@@ -7,59 +7,40 @@ export default function useForm(init: any) {
 
 };
 
-export function validateOnSubmit(name: any, validate: any) {
+export function validateForm(_form:any) {
+    const {field, validate } = _form;
     let isValid = false;
 
     Object.keys(validate).forEach(vKey => {
-        Object.keys(name).forEach(nKey => {
-            if (vKey === nKey) {
+        Object.keys(field).forEach(fKey => {
+            if (vKey === fKey) {
                 const { isError } = validate[vKey];
                 if (isError) {
                     isValid = true;
                 }
             }
-
         });
-
     });
-
 
     return isValid;
 }
 
 
-export function validateField(_field: any, _validate: any, setForm: any) {
+export function validateField(_field: any, _form: any) {
+    const {validate, setForm } = _form;
     const { name, value } = _field;
-    const validate = _validate;
 
     Object.keys(validate).forEach(vKey => {
-        const { rule, options, message } = validate[vKey];
+        const { rule, options } = validate[vKey];
         if (name === vKey) {
             if (rule instanceof Function) {
                 const _isError = rule(options, value)
                 setForm((prev: any) => ({
                     ...prev,
-                    name: { ...prev.name, [name]: value },
-                    validate: { ...prev.validate, [vKey]: { rule, options, isError: _isError, message: message } }
+                    field: { ...prev.field, [name]: value },
+                    validate: { ...prev.validate, [vKey]: { ...prev.validate[vKey], isError: _isError} }
                 }));
             }
         }
     });
-}
-
-export function hasLength(options: any, _value: any) {
-    const { max, min } = options;
-    let isError = false;
-    let value = _value;
-
-    if (typeof max === 'number' && value.length > max) {
-        isError = true;
-    }
-
-    if (value.length < min) {
-        isError = true;
-    }
-
-    return isError;
-
 }
