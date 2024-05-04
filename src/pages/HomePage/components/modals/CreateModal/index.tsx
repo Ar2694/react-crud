@@ -1,18 +1,19 @@
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { FormControl, Grid } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import { useUsersContext } from '../../../../../contexts/UsersContext';
-
-import "../styles.css";
+import { FormControl, FormHelperText, Grid, TextField } from '@mui/material';
+import ModalProvider, { useModalContext } from '../../../../../contexts/ModalContext';
+import useForm, { validateAllFields, validateField, validateFields, validateForm } from '../../../../../shared/hooks/useForm';
+import editModalForm from '../../../../../shared/hooks/useForm/validations/editModalForm';
+import UserService from '../../../../../api/services/UserService';
+import { usePageContext } from '../../../../../contexts/PageContext';
+import createModalForm from '../../../../../shared/hooks/useForm/validations/createModalForm';
 
 
 const style = {
     position: 'absolute' as 'absolute',
-    top: '30%',
+    top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
@@ -22,128 +23,117 @@ const style = {
     p: 4,
 };
 
-const initUser = {
-    firstname: "",
-    lastname: "",
-    phoneNumber: "",
-    address: "",
-    email: ""
-}
-const initValidation = {
-    firstname: -1,
-    lastname: -1,
-    phoneNumber: -1,
-    address: -1,
-    email: -1
-}
-
 export default function CreateModal(props: any) {
-    const { createUser } = useUsersContext();
-    const [newUser, setNewUser] = useState(initUser);
-    const [validation, setValidation] = useState(initValidation);
-    const show = props.createModal;
-    const setCreateModal = props.setCreateModal;
+    const button = props.button ?? <Button variant="contained" color="secondary" >Create User</Button>;
+    const { functions: pageFunc } = usePageContext();
+    const { getUsers } = pageFunc;
 
-    const handleForm = (e: any) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        if (value.trim().length > 0) {
-            setValidation((prev) => ({ ...prev, [name]: value ? 1 : -1 }));
-        } else {
-            setValidation((prev) => ({ ...prev, [name]: 0 }));
-        }
-        setNewUser((values: any) => ({ ...values, [name]: value }))
-    }
-    const handleCreate = () => {
-        verifyAll();
-    }
+    const functions = (_state: any, _setState: any) => ({
+  
+        onSubmit: async (form: any, close: any) => {
+            const { field } = form;
+            validateAllFields(field, form);
+            const isFormValid = validateForm(form);
+  
 
-    const handleCancel = () => {
-        setCreateModal(!show);
-        setNewUser(initUser);
-        setValidation(initValidation);
-    }
+            console.log(isFormValid,"isFormValid")
+            if (!isFormValid) {
+          
+                // const result = await UserService.init().updateUser(field);
 
-    const verifyAll = () => {
-        for (const [name, value] of Object.entries(validation)) {
-            if (value === -1) {
-                setValidation((prev) => ({ ...prev, [name]: value ? 0 : -1 }));
+                // if (result && result.isOk && result.data.acknowledged) {
+                //     _setState({ isError: false })
+                //     getUsers();
+                //     close();
+                // } else {
+                //     _setState({ isError: true, error: "Sorry! Something went wrong..." })
+                // }
+            } else {
+
+                _setState({ isError: isFormValid, error: "*Please enter the required fields" })
             }
+        },
+        onChange: (evt: any, form: any) => {
+            const field = evt.target
+            validateField(field, form)
+            _setState({ isError: false })
         }
-        if (Object.values(validation).some((value) => value !== 1)) {
-            // TODO: if there is invalid value, do something here.
-
-        } else {
-            // if pass send data.
-            createUser(newUser);
-            setNewUser(initUser);
-            setValidation(initValidation);
-            setCreateModal(!show);
-        }
-    }
-
+    })
     return (
-        <Modal className="modal delete-modal" open={show}>
+        <ModalProvider functions={functions} button={button}>
+            <CreateModalContent />
+        </ModalProvider>
+    )
+}
+
+export function CreateModalContent() {
+    const { modal, close, functions, toggle, state } = useModalContext();
+    const { onChange, onSubmit } = functions;
+    const form = useForm(createModalForm);
+    const { field, validate } = form;
+console.log(form, "CreateModalContent")
+    return (
+        <Modal className="modal create-modal" open={modal}>
             <Box sx={style} >
                 <Typography id="id-id-title" variant='h5' gutterBottom={true}>
-                    Create A User
+                    Craete A User
                 </Typography>
                 <FormControl fullWidth={true} className="modal-form-control">
-
                     <TextField
                         className="modal-text-field"
                         label="First Name"
                         variant="standard"
                         name="firstname"
-                        value={newUser.firstname}
-                        onChange={handleForm}
-                        error={validation["firstname"] === 0}
-                        helperText={validation["firstname"] === 0 ? "First Name is required" : ""}
+                        value={field.firstname}
+                        onChange={(e) => onChange(e, form)}
+                        error={validate.firstname.isError}
+                        helperText={validate.firstname.isError && validate.firstname.message}
                     />
                     <TextField
                         className="modal-text-field"
                         label="Last Name"
                         variant="standard"
                         name="lastname"
-                        value={newUser.lastname}
-                        error={validation["lastname"] === 0}
-                        helperText={validation["lastname"] === 0 ? "Last Name is required" : ""}
-                        onChange={handleForm}
+                        value={field.lastname}
+                        error={validate.lastname.isError}
+                        helperText={validate.lastname.isError && validate.lastname.message}
+                        onChange={(e) => onChange(e, form)}
                     />
                     <TextField
                         className="modal-text-field"
                         label="Phone Number"
                         variant="standard"
                         name="phoneNumber"
-                        error={validation["phoneNumber"] === 0}
-                        helperText={validation["phoneNumber"] === 0 ? "Phone number is required" : ""}
-                        value={newUser.phoneNumber}
-
-                        onChange={handleForm}
+                        error={validate.phoneNumber.isError}
+                        helperText={validate.phoneNumber.isError && validate.phoneNumber.message}
+                        value={field.phoneNumber}
+                        onChange={(e) => onChange(e, form)}
                     />
                     <TextField
                         className="modal-text-field"
                         label="Address" variant="standard"
                         name="address"
-                        value={newUser.address}
-                        error={validation["address"] === 0}
-                        helperText={validation["address"] === 0 ? "Address is required" : ""}
-                        onChange={handleForm}
+                        value={field.address}
+                        error={validate.address.isError}
+                        helperText={validate.address.isError && validate.address.message}
+                        onChange={(e) => onChange(e, form)}
                     />
                     <TextField
+
                         className="modal-text-field"
                         label="Email"
                         variant="standard"
                         name="email"
-                        value={newUser.email}
-                        error={validation["email"] === 0}
-                        helperText={validation["email"] === 0 ? "Email is required" : ""}
-                        onChange={handleForm}
+                        value={field.email}
+                        error={validate.email.isError}
+                        helperText={validate.email.isError && validate.email.message}
+                        onChange={(e) => onChange(e, form)}
                     />
                 </FormControl>
+                {state.isError && <FormHelperText id="my-helper-text" error>{state.error}</FormHelperText>}
                 <Grid className="modal-button-container" columnGap={3} container direction="row" justifyContent="flex-end">
-                    <Button variant="text" color="secondary" onClick={handleCancel}>Cancel</Button>
-                    <Button variant="contained" onClick={handleCreate}>Create</Button>
+                    <Button variant="text" color="secondary" onClick={toggle}>Cancel</Button>
+                    <Button variant="contained" onClick={() => onSubmit(form, close)}>Create</Button>
                 </Grid>
             </Box>
         </Modal>

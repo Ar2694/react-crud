@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Grid, TextField } from "@mui/material";
-import CreateModal from "./components/modals/CreateModal";
+
 import BaseLayout from "../../shared/containers/BaseLayout";
 import UsersTable from "./components/Tables/UserTable";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
@@ -9,26 +9,19 @@ import PageProvider, { usePageContext } from "../../contexts/PageContext";
 
 //Styles
 import "./styles.css";
+import CreateModal from "./components/modals/CreateModal";
 
 export function HomePage() {
 
-  const functions = (page: any, setPage: any) => ({
+  const functions = (_page: any, _setPage: any) => ({
     searchUsers: async (evt: any) => {
       const search = evt.target.value;
       const users = await UserService.init().searchUsers(search);
-      setPage((prev: any) => ({ ...prev, users }));
+    _setPage((prev: any) => ({ ...prev, users }));
     },
-
     getUsers: async () => {
       const users = await UserService.init().getUsers();
-      console.log(users)
-      setPage((prev: any) => ({ ...prev, users }));
-    },
-
-    updateUsers: async () => {
-      console.log(page)
-      const users: any = [];
-      setPage((prev: any) => ({ ...prev, users }));
+      _setPage((prev: any) => ({ ...prev, users }));
     }
   })
 
@@ -55,12 +48,11 @@ function Home(props: any) {
         <Grid item xs>
           <TextField placeholder="Search" name="search" onChange={searchUsers} variant="outlined" fullWidth className="search-input" />
         </Grid>
-        {isAuthenticated ? <Grid item xs={2} className="button-container">
-          <Button variant="contained" color="secondary" onClick={handleCreate}>Create User</Button>
-        </Grid> : null}
+        {isAuthenticated && <Grid item xs={2} className="button-container">
+          <CreateModal />
+        </Grid>}
       </Grid>
       <UsersTable />
-      <CreateModal createModal={createModal} setCreateModal={setCreateModal} />
     </BaseLayout>
   )
 }

@@ -16,10 +16,8 @@ import { usePageContext } from '../../../../../contexts/PageContext';
 
 export default function UsersTable(props: any) {
   const {functions, page} = usePageContext();
-  const {updateUsers, getUsers} = functions;
+  const { getUsers} = functions;
   const data = page.users ?? [];
-
-  const [editModal, setEditModal] = useState({ user: {}, show: false, setUpdate: props.setUpdate });
   const [deleteModal, setDeleteModal] = useState({ id: "", show: false, setUpdate: props.setUpdate });
   const isAuthenticated = useIsAuthenticated();
 
@@ -32,7 +30,6 @@ export default function UsersTable(props: any) {
 
   return (
     <TableContainer component={Paper} >
-      <Button onClick={updateUsers}>Edit</Button>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -41,13 +38,11 @@ export default function UsersTable(props: any) {
             <TableCell>Phone Number</TableCell>
             <TableCell>Address</TableCell>
             <TableCell>Email</TableCell>
-
-            {isAuthenticated ?
+            {isAuthenticated &&
               <>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </>
-              : ""
             }
 
           </TableRow>
@@ -61,12 +56,11 @@ export default function UsersTable(props: any) {
                 <TableCell>{user.phoneNumber}</TableCell>
                 <TableCell>{user.address}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                {isAuthenticated?
+                {isAuthenticated &&
                   <>
-                    <TableCell><EditModal {...user} /></TableCell>
+                    <TableCell><EditModal user={user} /></TableCell>
                     <TableCell><Button onClick={() => { handleDelete(user._id) }}>Delete</Button></TableCell>
                   </>
-                  : ""
                 }
 
               </TableRow>))

@@ -10,6 +10,7 @@ export default function useForm(init: any) {
 export function validateForm(_form:any) {
     const {field, validate } = _form;
     let isValid = false;
+    console.log(_form, "validateForm")
 
     Object.keys(validate).forEach(vKey => {
         Object.keys(field).forEach(fKey => {
@@ -43,4 +44,28 @@ export function validateField(_field: any, _form: any) {
             }
         }
     });
+}
+
+export function validateAllFields(_fields: any, _form: any) {
+    const {validate, setForm } = _form;
+    const fields = _fields;
+
+    console.log(_fields, "validateFields")
+    Object.keys(fields).forEach(fKey => {
+        Object.keys(validate).forEach(vKey => {
+            const { rule, options } = validate[vKey];
+            if (fKey === vKey) {
+                if (rule instanceof Function) {
+                    const _isError = rule(options, fields[fKey])
+                    setForm((prev: any) => ({
+                        ...prev,
+                        field: { ...prev.field, [fKey]: fields[fKey] },
+                        validate: { ...prev.validate, [vKey]: { ...prev.validate[vKey], isError: _isError} }
+                    }));
+                }
+            }
+        });
+    });
+
+
 }

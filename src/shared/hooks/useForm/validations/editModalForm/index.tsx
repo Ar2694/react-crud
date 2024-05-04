@@ -26,13 +26,13 @@ export default function editModalForm(users:any) {
                 rule: hasLength,
                 options: { min: 1 },
                 isError: false,
-                message: "Address is required"
+                message: "Address is required."
             },
             email: {
                 rule: hasLength,
                 options: { min: 1 },
                 isError: false,
-                message: "Email is required"
+                message: "Email is required."
             },
         },
     }

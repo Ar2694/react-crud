@@ -2,11 +2,14 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { FormControl, Grid, TextField } from '@mui/material';
+import { FormControl, FormHelperText, Grid, TextField } from '@mui/material';
 import ModalProvider, { useModalContext } from '../../../../../contexts/ModalContext';
-import useForm, { validateField, validateForm } from '../../../../../shared/tools/useForm';
-import editModalForm from '../../../../../shared/tools/useForm/validations/editModalForm';
+import useForm, { validateField, validateForm } from '../../../../../shared/hooks/useForm';
+import editModalForm from '../../../../../shared/hooks/useForm/validations/editModalForm';
+import UserService from '../../../../../api/services/UserService';
+import { usePageContext } from '../../../../../contexts/PageContext';
 
+import "../styles.css";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -22,22 +25,35 @@ const style = {
 
 export default function EditModal(props: any) {
     const button = props.button ?? <Button variant="text" color="secondary">Edit</Button>;
+    const { functions: pageFunc } = usePageContext();
+    const { getUsers } = pageFunc;
 
     const functions = (_state: any, _setState: any) => ({
-        onSubmit: (form: any) => {
+        user: props.user,
+        onSubmit: async (form: any, close: any) => {
             const isFormValid = validateForm(form);
-            console.log(isFormValid)
+
             if (!isFormValid) {
-                console.log("Form Submitted!")
+                const { field } = form;
+                const result = await UserService.init().updateUser(field);
+
+                if (result && result.isOk && result.data.acknowledged) {
+                    _setState({ isError: false })
+                    getUsers();
+                    close();
+                } else {
+                    _setState({ isError: true, error: "Sorry! Something went wrong..." })
+                }
             } else {
-                console.log("Form is not valid!")
+
+                _setState({ isError: isFormValid, error: "*Please enter the required fields" })
             }
         },
         onChange: (evt: any, form: any) => {
             const field = evt.target
             validateField(field, form)
-        },
-        users: props
+            _setState({ isError: false })
+        }
     })
     return (
         <ModalProvider functions={functions} button={button}>
@@ -47,13 +63,13 @@ export default function EditModal(props: any) {
 }
 
 export function EditModalContent() {
-    const { modal, functions, toggle } = useModalContext();
-    const { onChange, users, onSubmit } = functions;
-    const form = useForm(editModalForm(users));
+    const { modal, close, functions, toggle, state } = useModalContext();
+    const { onChange, user, onSubmit } = functions;
+    const form = useForm(editModalForm(user));
     const { field, validate } = form;
 
     return (
-        <Modal className="modal delete-modal" open={modal}>
+        <Modal className="modal edit-modal" open={modal}>
             <Box sx={style} >
                 <Typography id="id-id-title" variant='h5' gutterBottom={true}>
                     Edit User
@@ -110,9 +126,10 @@ export function EditModalContent() {
                         onChange={(e) => onChange(e, form)}
                     />
                 </FormControl>
+                {state.isError && <FormHelperText id="my-helper-text" error>{state.error}</FormHelperText>}
                 <Grid className="modal-button-container" columnGap={3} container direction="row" justifyContent="flex-end">
                     <Button variant="text" color="secondary" onClick={toggle}>Cancel</Button>
-                    <Button variant="contained" onClick={() => onSubmit(form)}>Edit</Button>
+                    <Button variant="contained" onClick={() => onSubmit(form, close)}>Edit</Button>
                 </Grid>
             </Box>
         </Modal>

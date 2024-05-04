@@ -68,8 +68,9 @@ export default class UserService {
     }
 
     const put= await APIClient.put(`/api/user-model/${user._id}`, updateUser)
-    
     console.log(put, "update user")
+    return put;
+  
   }
 
 }
