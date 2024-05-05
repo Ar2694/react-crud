@@ -20,7 +20,7 @@ const style = {
 };
 
 export default function DeleteModal(props: any) {
-    const button = props.button ?? <Button variant="text" color="secondary">Delet</Button>;
+    const button = props.button ?? <Button variant="text" color="secondary">Delete</Button>;
     const { functions: pageFunc } = usePageContext();
     const { getUsers } = pageFunc;
 

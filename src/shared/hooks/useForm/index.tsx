@@ -10,8 +10,6 @@ export default function useForm(init: any) {
 export function validateForm(_form:any) {
     const {field, validate } = _form;
     let isValid = false;
-    console.log(_form, "validateForm")
-
     Object.keys(validate).forEach(vKey => {
         Object.keys(field).forEach(fKey => {
             if (vKey === fKey) {

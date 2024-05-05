@@ -10,14 +10,13 @@ export default class APIClient {
                 method: HttpMethod.GET,
                 httpHeader: {
                     "Content-Type": "application/json",
-
                 },
                 cache: "no-store"
             }
 
             const request = await FetchClient.createRequest(url, options);
 
-            return {
+            return {    
                 data: request.responseData(),
                 isOk: request.isOk()
             };
@@ -28,41 +27,42 @@ export default class APIClient {
     }
 
     // POST request
-    static async post(url: string, data: any): Promise<any> {
+    static async post(url: string, body: any): Promise<any> {
         try {
             const options = {
                 method: HttpMethod.POST,
                 httpHeader: {
                     "Content-Type": "application/json"
                 },
-                data: data
+                body: body
             }
 
             const request = await FetchClient.createRequest(url, options);
 
             return {
                 data: request.responseData(),
-                isOk: request.isOk()
+                isOk: request.isOk(),
+                token: request.getToken()
             };
         } catch (error) {
+            
             console.log("POST =>: " + error)
         }
 
     }
 
     //PUT request
-    static async put(url: string, data: any): Promise<any> {
+    static async put(url: string, body: any): Promise<any> {
         try {
             const options = {
                 method: HttpMethod.PUT,
                 httpHeader: {
                     "Content-Type": "application/json"
                 },
-                data: data
+                body: body
             }
 
             const request = await FetchClient.createRequest(url, options);
-
             return {
                 data: request.responseData(),
                 isOk: request.isOk()

@@ -44,7 +44,6 @@ export default class UserService {
     }
 
     const _post = await APIClient.post("/api/user-model/", newUser);
-    console.log(_post, "create user")
     return _post;
   }
 
@@ -59,7 +58,6 @@ export default class UserService {
     }
 
     const _put = await APIClient.put(`/api/user-model/${user._id}`, updateUser)
-    console.log(_put, "update user")
     return _put;
   }
 

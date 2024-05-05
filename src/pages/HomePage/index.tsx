@@ -1,6 +1,6 @@
 import {  Grid, TextField } from "@mui/material";
 import BaseLayout from "../../shared/containers/BaseLayout";
-import UsersTable from "./components/Tables/UserTable";
+import UsersTable from "./components/UserTable";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import UserService from "../../api/services/UserService";
 import PageProvider, { usePageContext } from "../../contexts/PageContext";

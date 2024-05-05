@@ -3,7 +3,7 @@ const express = require("express");
 const User = require("../models/user-model.js");
 const BaseResponse = require("../services/base-response.js");
 const ErrorResponse = require("../services/error-response.js");
-const userPipeline = require("../pipelines/user-pipeline.js");
+const searchPipeline = require("../pipelines/search-pipeline.js");
 
 //It defines router variables - configuration
 const router = express.Router();
@@ -31,7 +31,7 @@ router.get("/search/", async (req, res) => {
 router.get("/search/:query", async (req, res) => {
   try {
     const query = req.params.query;
-    const pipeline = userPipeline(query);
+    const pipeline = searchPipeline(query);
     const users = await User.aggregate(pipeline);
     const findBySearchResponse = new BaseResponse(200, "Query Successful", users);
 

@@ -3,7 +3,7 @@ import { HttpMethod, HttpStatusCode, StatusCode } from "./options";
 interface HttpOptions {
   method: HttpMethod,
   httpHeader?: any,
-  data?: any,
+  body?: any,
   cache?: any
 }
 
@@ -13,7 +13,7 @@ export default class FetchClient {
 
   static async createRequest(url: string, options: HttpOptions): Promise<any> {
     try {
-      const { method, httpHeader, data, cache } = options;
+      const { method, httpHeader, body, cache } = options;
       const requestInit: RequestInit = { method };
 
       if (cache) {
@@ -23,17 +23,22 @@ export default class FetchClient {
         requestInit.headers = httpHeader;
       }
 
-      if (data) {
-        requestInit.body = JSON.stringify(data);
+      if (body) {
+        requestInit.body = JSON.stringify(body);
       }
 
       this.resp = await fetch(url, requestInit);
-      
+
       if(this.resp.ok){
 
         this.respBody = await this.resp.json();
         return this;
         
+      }else if(this.resp.status === 401){
+
+        this.respBody = await this.resp.json();
+        return this;
+
       }else{
         throw new Error(this.resp.status + " " +this.resp.statusText)
       }
@@ -54,6 +59,10 @@ export default class FetchClient {
     };
   }
 
+  static getToken(): string {
+    return this.respBody.token;
+  }
+ 
   static isOk(): boolean {
     return this.resp.ok;
   }

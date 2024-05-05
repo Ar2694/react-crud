@@ -6,10 +6,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect } from "react";
-import DeleteModal from '../../../../../shared/modals/DeleteModal';
-import EditModal from '../../../../../shared/modals/EditModal';
+import DeleteModal from '../../../../shared/modals/DeleteModal';
+import EditModal from '../../../../shared/modals/EditModal';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
-import { usePageContext } from '../../../../../contexts/PageContext';
+import { usePageContext } from '../../../../contexts/PageContext';
 
 
 export default function UsersTable(_props: any) {

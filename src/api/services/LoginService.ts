@@ -1,31 +1,15 @@
 import { Login } from "../../interfaces/LoginInterface";
+import APIClient from "../APIClient";
 
 const login = async (login: Login) => {
-
   const loginInfo = {
     username: login.username,
     password: login.password,
-
   }
-
-  return await fetch(`http://localhost:3000/api/login-model/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(loginInfo)
-  })
-    .then((response) => {
-      return response.json();
-    })
-    .then((response) => {
-      return response;
-    })
-    .catch((err) => {
-      return err;
-    })
+  
+  const _post = await APIClient.post("/api/login-model/login", loginInfo);
+  return _post;
 }
-
 
 const findByUsername = async (username: string): Promise<any> => {
 
