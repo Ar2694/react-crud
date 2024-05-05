@@ -36,7 +36,6 @@ export default function Navbar() {
               <Typography className="welcome-message" sx={{ flexGrow: 1 }}>Welcome, {username}!</Typography>
               <Link component="button" underline="none" onClick={logout} color="inherit">Log Out</Link>
             </>
-
             :  <Link component="button" underline="none" onClick={login} color="inherit">Login</Link>}
         </Toolbar>
       </AppBar>

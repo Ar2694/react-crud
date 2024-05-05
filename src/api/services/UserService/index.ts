@@ -10,14 +10,14 @@ export default class UserService {
 
   // getUsers
   getUsers = async () => {
-    const get = await APIClient.get("/api/user-model/")
-    return get.data;
+    const _get = await APIClient.get("/api/user-model/")
+    return _get.data;
   }
 
   // getUsers
   searchUsers = async (query: any) => {
-    const get = await APIClient.get(`/api/user-model/search/${query}`)
-    return get.data;
+    const _get = await APIClient.get(`/api/user-model/search/${query}`)
+    return _get.data;
   }
 
   // findAUser
@@ -28,13 +28,8 @@ export default class UserService {
 
   // deleteUser
   deleteUser = async (id: string) => {
-    return APIClient.delete(`/api/user-model/${id}`)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((err) => {
-        return err;
-      })
+    const _delete = await APIClient.delete(`/api/user-model/${id}`);
+    return _delete;
 
   }
 
@@ -48,13 +43,9 @@ export default class UserService {
       email: user.email
     }
 
-    return APIClient.post("/api/user-model/", newUser)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((err) => {
-        return err;
-      })
+    const _post = await APIClient.post("/api/user-model/", newUser);
+    console.log(_post, "create user")
+    return _post;
   }
 
   //updateUser
@@ -67,10 +58,9 @@ export default class UserService {
       email: user.email
     }
 
-    const put= await APIClient.put(`/api/user-model/${user._id}`, updateUser)
-    console.log(put, "update user")
-    return put;
-  
+    const _put = await APIClient.put(`/api/user-model/${user._id}`, updateUser)
+    console.log(_put, "update user")
+    return _put;
   }
 
 }

@@ -1,18 +1,14 @@
-import { useState } from "react";
-import { Button, Grid, TextField } from "@mui/material";
-
+import {  Grid, TextField } from "@mui/material";
 import BaseLayout from "../../shared/containers/BaseLayout";
 import UsersTable from "./components/Tables/UserTable";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import UserService from "../../api/services/UserService";
 import PageProvider, { usePageContext } from "../../contexts/PageContext";
+import CreateModal from "../../shared/modals/CreateModal";
 
-//Styles
 import "./styles.css";
-import CreateModal from "./components/modals/CreateModal";
 
 export function HomePage() {
-
   const functions = (_page: any, _setPage: any) => ({
     searchUsers: async (evt: any) => {
       const search = evt.target.value;
@@ -32,15 +28,10 @@ export function HomePage() {
   )
 }
 
-function Home(props: any) {
+function Home(_props: any) {
   const { functions } = usePageContext();
   const { searchUsers } = functions;
-  const [createModal, setCreateModal] = useState(false);
   const isAuthenticated = useIsAuthenticated();
-
-  const handleCreate = () => {
-    setCreateModal(!createModal)
-  }
 
   return (
     <BaseLayout className="home-page">

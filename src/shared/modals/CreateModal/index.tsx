@@ -3,13 +3,12 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { FormControl, FormHelperText, Grid, TextField } from '@mui/material';
-import ModalProvider, { useModalContext } from '../../../../../contexts/ModalContext';
-import useForm, { validateField, validateForm } from '../../../../../shared/hooks/useForm';
-import editModalForm from '../../../../../shared/hooks/useForm/validations/editModalForm';
-import UserService from '../../../../../api/services/UserService';
-import { usePageContext } from '../../../../../contexts/PageContext';
+import ModalProvider, { useModalContext } from '../../../contexts/ModalContext';
+import useForm, { validateAllFields, validateField } from '../../hooks/useForm';
+import UserService from '../../../api/services/UserService';
+import { usePageContext } from '../../../contexts/PageContext';
+import createModalForm from '../../hooks/useForm/validations/createModalForm';
 
-import "../styles.css";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -23,21 +22,22 @@ const style = {
     p: 4,
 };
 
-export default function EditModal(props: any) {
-    const button = props.button ?? <Button variant="text" color="secondary">Edit</Button>;
+export default function CreateModal(props: any) {
+    const button = props.button ?? <Button variant="contained" color="secondary" >Create User</Button>;
     const { functions: pageFunc } = usePageContext();
     const { getUsers } = pageFunc;
 
     const functions = (_state: any, _setState: any) => ({
-        user: props.user,
+
         onSubmit: async (form: any, close: any) => {
-            const isFormValid = validateForm(form);
+            const { field } = form;
+
+            let isFormValid = validateAllFields(field, form);
 
             if (!isFormValid) {
-                const { field } = form;
-                const result = await UserService.init().updateUser(field);
+                const result = await UserService.init().createUser(field);
 
-                if (result && result.isOk && result.data.acknowledged) {
+                if (result && result.isOk) {
                     _setState({ isError: false })
                     getUsers();
                     close();
@@ -45,10 +45,10 @@ export default function EditModal(props: any) {
                     _setState({ isError: true, error: "Sorry! Something went wrong..." })
                 }
             } else {
-
-                _setState({ isError: isFormValid, error: "*Please enter the required fields" })
+                _setState({ isError: isFormValid, error: "*Please enter the required fields." })
             }
         },
+
         onChange: (evt: any, form: any) => {
             const field = evt.target
             validateField(field, form)
@@ -57,22 +57,22 @@ export default function EditModal(props: any) {
     })
     return (
         <ModalProvider functions={functions} button={button}>
-            <EditModalContent />
+            <CreateModalContent />
         </ModalProvider>
     )
 }
 
-export function EditModalContent() {
-    const { modal, close, functions, toggle, state } = useModalContext();
-    const { onChange, user, onSubmit } = functions;
-    const form = useForm(editModalForm(user));
+function CreateModalContent() {
+    const { modal, close, functions, state } = useModalContext();
+    const { onChange, onSubmit } = functions;
+    const form = useForm(createModalForm);
     const { field, validate } = form;
 
     return (
-        <Modal className="modal edit-modal" open={modal}>
+        <Modal className="modal create-modal" open={modal}>
             <Box sx={style} >
                 <Typography id="id-id-title" variant='h5' gutterBottom={true}>
-                    Edit User
+                    Create A User
                 </Typography>
                 <FormControl fullWidth={true} className="modal-form-control">
                     <TextField
@@ -128,8 +128,8 @@ export function EditModalContent() {
                 </FormControl>
                 {state.isError && <FormHelperText id="my-helper-text" error>{state.error}</FormHelperText>}
                 <Grid className="modal-button-container" columnGap={3} container direction="row" justifyContent="flex-end">
-                    <Button variant="text" color="secondary" onClick={toggle}>Cancel</Button>
-                    <Button variant="contained" onClick={() => onSubmit(form, close)}>Edit</Button>
+                    <Button variant="text" color="secondary" onClick={close}>Cancel</Button>
+                    <Button variant="contained" onClick={() => onSubmit(form, close)}>Create</Button>
                 </Grid>
             </Box>
         </Modal>

@@ -49,14 +49,17 @@ export function validateField(_field: any, _form: any) {
 export function validateAllFields(_fields: any, _form: any) {
     const {validate, setForm } = _form;
     const fields = _fields;
+    let isFormValid = false;
 
-    console.log(_fields, "validateFields")
     Object.keys(fields).forEach(fKey => {
         Object.keys(validate).forEach(vKey => {
             const { rule, options } = validate[vKey];
             if (fKey === vKey) {
                 if (rule instanceof Function) {
                     const _isError = rule(options, fields[fKey])
+                    if(_isError){
+                        isFormValid = true;
+                    }
                     setForm((prev: any) => ({
                         ...prev,
                         field: { ...prev.field, [fKey]: fields[fKey] },
@@ -65,7 +68,9 @@ export function validateAllFields(_fields: any, _form: any) {
                 }
             }
         });
+  
     });
 
 
+    return isFormValid;
 }

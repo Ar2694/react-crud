@@ -5,7 +5,7 @@ const ModalContext = React.createContext<any | null>(null);
 
 export default function ModalProvider(props: any) {
     const [modal, setModal] = useState(false);
-    const [state, setState] = useState("");
+    const [state, setState] = useState({});
     
     const context = {
         functions: props.functions instanceof Function ? props.functions(state, setState) : {},
