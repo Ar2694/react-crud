@@ -28,24 +28,12 @@ export default class FetchClient {
       }
 
       this.resp = await fetch(url, requestInit);
+      this.respBody = await this.resp.json();
 
-      if(this.resp.ok){
-
-        this.respBody = await this.resp.json();
-        return this;
-        
-      }else if(this.resp.status === 401){
-
-        this.respBody = await this.resp.json();
-        return this;
-
-      }else{
-        throw new Error(this.resp.status + " " +this.resp.statusText)
-      }
- 
+      return this;
     }
     catch (error) {
-      console.log("Create request => " + error);
+      console.log(error);
     }
   }
 

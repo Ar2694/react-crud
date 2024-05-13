@@ -1,43 +1,88 @@
-import React, { useState } from "react";
+import { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LoginService from '../../api/services/LoginService';
+import PageProvider, { usePageContext } from "../../contexts/PageContext";
+import FindUsername from "./components/FindUsername";
+import { compareValues, validateAllFields, validateField } from "../../shared/hooks/useForm";
+import ResetPassword from "./components/ResetPassword";
+import ResetConfirmDialog from "../../shared/dialogs/ResetConfirmDialog";
 
 import "./styles.css";
-import { FormHelperText } from "@mui/material";
-import ResetConfirmModal from "./components/ResetConfirmModal";
-
 
 const defaultTheme = createTheme();
 
 export default function ForgotPasswordPage() {
-    const [user, setUser] = useState({ isFound: false, username: "" });
-    const [usernameError, setUsernameError] = useState(false);
 
+    const functions = (page: any, setPage: any) => ({
+        onResetPassword: async (form: any) => {
+            const { field } = form;
+            let isFormValid = validateAllFields(field, form);
 
-    const checkUser = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const loginInfo = {
-            username: data.get('username') as string,
-        }
+            if (!isFormValid) {
+                const isMatch = compareValues({password: field.password, confirmPassword: field.confirmPassword})
+     
+                if (isMatch) {
 
-        await LoginService.findByUsername(loginInfo.username).then((res) => {
-            if (res) {
-                setUsernameError(false);
-                setUser({ isFound: true, username: res.username })
+                    const result =  await LoginService.init().resetPassword({ username: page.username, password: field.confirmPassword })
+
+                    if (result.data && result.isOk) {
+      
+                        setPage({ username: field.username, isError: false, children: <ResetPassword />, dialog: <ResetConfirmDialog /> })
+
+                    } else {
+                        setPage((prev: any) => ({ ...prev, isError: true, error: "Sorry! Something went wrong..." }))
+                    }
+
+                } else {
+                    setPage((prev: any) => ({ ...prev, isError: !isMatch, error: "*Password does not match!" }))
+                }
+
             } else {
-                setUsernameError(true);
+                setPage((prev: any) => ({ ...prev, isError: isFormValid, error: "*Please enter the required fields." }))
             }
-        })
-    };
+        },
+        onSearchUsername: async (form: any) => {
+            const { field } = form;
+            let isFormValid = validateAllFields(field, form);
+
+            if (!isFormValid) {
+                const result = await LoginService.init().findByUsername(field.username)
+
+                if (result.data && result.isOk) {
+                    setPage({ username: field.username, isError: false, children: <ResetPassword /> })
+
+                } else {
+                    setPage((prev: any) => ({ ...prev, isError: true, error: "Username does not exist." }))
+                }
+            } else {
+                setPage((prev: any) => ({ ...prev, isError: isFormValid, error: "*Please enter the required fields." }))
+            }
+        },
+        onChange: (evt: any, form: any) => {
+            const field = evt.target
+            validateField(field, form)
+            setPage((prev: any) => ({ ...prev, isError: false }))
+        }
+    })
+    return (
+        <PageProvider functions={functions} >
+            <ForgotPasswordContent />
+        </PageProvider>
+    )
+}
+
+export function ForgotPasswordContent() {
+    const { page, setPage } = usePageContext();
+
+    useEffect(() => {
+        setPage({ children: <FindUsername /> })
+    }, [])
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -57,148 +102,15 @@ export default function ForgotPasswordPage() {
                     <Typography component="h1" variant="h5">
                         Forgot password?
                     </Typography>
-                    {!user.isFound ? <FindUsername checkUser={checkUser} usernameError={usernameError} /> : null}
-                    {user.isFound ? <EnterNewPassword user={user} /> : null}
+
+                    {page.children}
+                    {page.dialog}
+
                 </Box>
             </Container>
         </ThemeProvider>
     );
 }
 
-function FindUsername({ usernameError, checkUser }: any) {
-    return (
-        <Box component="form" className="find-username" onSubmit={checkUser} noValidate sx={{ mt: 1 }}>
-            {usernameError ? <FormHelperText error>Invalid username</FormHelperText> : null}
-            <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Enter your username"
-                name="username"
-                autoComplete="username"
-            />
-            <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-            >
-                Find Username
-            </Button>
-        </Box>
 
-    )
-}
 
-function EnterNewPassword(props: any) {
-    const initPass = {
-        newPass: "",
-        confirmPass: ""
-    }
-
-    const initValid = {
-        newPass: -1,
-        confirmPass: -1,
-
-    }
-    const [newPass, setNewPass] = useState(initPass);
-    const [validation, setValidation] = useState(initValid);
-    const [isMatch, setIsMatch] = useState(false);
-    const [resetConfirmModal, setResetConfirmModal] = useState(false);
-
-    const handleForm = (e: any) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        if (value.trim().length > 0) {
-            setValidation((prev) => ({ ...prev, [name]: value ? 1 : -1 }));
-        } else {
-            setValidation((prev) => ({ ...prev, [name]: 0 }));
-        }
-        setNewPass((values: any) => ({ ...values, [name]: value }))
-    }
-
-    const handleReset = (e: any) => {
-        e.preventDefault();
-        verifyAll();
-    }
-
-    const verifyAll = async () => {
-
-        for (const [name, value] of Object.entries(validation)) {
-            if (value === -1) {
-                setValidation((prev) => ({ ...prev, [name]: value ? 0 : -1 }));
-            }
-        }
-
-        console.log(newPass.newPass === newPass.confirmPass)
-        console.log(Object.values(validation).every((value) => value === 1))
-        if (Object.values(validation).every((value) => value === 1)) {
-          
-            if (newPass.newPass === newPass.confirmPass) {
-               
-                const userInfo = {
-                    username: props.user.username,
-                    password: newPass.newPass
-                }
-                console.log("validatefdd",newPass)
-               LoginService.resetPassword(userInfo);
-       
-                setIsMatch(false);
-                setResetConfirmModal(true);
-                console.log("validated here",newPass)
-
-            } else {
-                setIsMatch(true);
-                console.log("not validated")
-            }
-        }else{
-            console.log("broken")
-        }
-    }
-
-    return (
-        <Box component="form" noValidate sx={{ mt: 1 }}>
-            {isMatch ? <FormHelperText error>Password does not match!</FormHelperText> : null}
-            <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="newPass"
-                label="Enter new password"
-                type="password"
-                id="newPass"
-                autoComplete="new-password"
-                onChange={handleForm}
-                error={validation["newPass"] === 0}
-                helperText={validation["newPass"] === 0 ? "Password required" : ""}
-            />
-
-            <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="confirmPass"
-                label="Confirm password"
-                type="password"
-                id="confirmPass"
-                autoComplete="confirmPass"
-                onChange={handleForm}
-                error={validation["confirmPass"] === 0}
-                helperText={validation["confirmPass"] === 0 ? "Confirm password required" : ""}
-            />
-
-            <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleReset}
-            >
-                Confirm
-            </Button>
-            <ResetConfirmModal resetConfirmModal={resetConfirmModal} setResetConfirmModal={setResetConfirmModal} />
-        </Box>
-
-    )
-}

@@ -21,7 +21,7 @@ export default class APIClient {
                 isOk: request.isOk()
             };
         } catch (error) {
-            console.log("GET => " + error)
+            console.log(error)
         }
 
     }
@@ -46,7 +46,7 @@ export default class APIClient {
             };
         } catch (error) {
             
-            console.log("POST =>: " + error)
+            console.log(error)
         }
 
     }
@@ -63,12 +63,13 @@ export default class APIClient {
             }
 
             const request = await FetchClient.createRequest(url, options);
+   
             return {
                 data: request.responseData(),
                 isOk: request.isOk()
             };
         } catch (error) {
-            console.log("PUT => " + error)
+            console.log(error)
         }
 
     }
@@ -87,7 +88,7 @@ export default class APIClient {
                 isOk: request.isOk()
             };
         } catch (error) {
-            console.log("DELETE => " + error)
+            console.log(error)
         }
     }
 }

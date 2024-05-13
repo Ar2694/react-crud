@@ -72,3 +72,20 @@ export function validateAllFields(_fields: any, _form: any) {
 
     return isFormValid;
 }
+
+export function compareValues(_values: any){
+    const values = _values;
+    let isMatch = false;
+
+    Object.keys(values).forEach(currKey => {
+        Object.keys(values).forEach(key => {
+            if(currKey !== key){
+                if(values[currKey] === values[key]){
+                    isMatch = true;
+                }
+            }
+        })
+    })
+
+    return isMatch;
+}

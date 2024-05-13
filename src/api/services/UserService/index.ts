@@ -3,32 +3,37 @@ import APIClient from "../../APIClient";
 
 
 export default class UserService {
+  private baseURI: string;
+
+  constructor(baseURI: string) {
+    this.baseURI = baseURI;
+  }
 
   static init() {
-    return new UserService();
+    return new UserService("/api/user-model");
   }
 
   // getUsers
   getUsers = async () => {
-    const _get = await APIClient.get("/api/user-model/")
+    const _get = await APIClient.get(`${this.baseURI}/`)
     return _get.data;
   }
 
   // getUsers
   searchUsers = async (query: any) => {
-    const _get = await APIClient.get(`/api/user-model/search/${query}`)
+    const _get = await APIClient.get(`${this.baseURI}/search/${query}`)
     return _get.data;
   }
 
   // findAUser
   findAUser = async (id: string) => {
-    const get = await APIClient.get(`/api/user-model/${id}`)
-    return get.data;
+    const _get = await APIClient.get(`${this.baseURI}/${id}`)
+    return _get.data;
   }
 
   // deleteUser
   deleteUser = async (id: string) => {
-    const _delete = await APIClient.delete(`/api/user-model/${id}`);
+    const _delete = await APIClient.delete(`${this.baseURI}/${id}`);
     return _delete;
 
   }
@@ -43,7 +48,7 @@ export default class UserService {
       email: user.email
     }
 
-    const _post = await APIClient.post("/api/user-model/", newUser);
+    const _post = await APIClient.post(`${this.baseURI}/`, newUser);
     return _post;
   }
 
@@ -57,7 +62,7 @@ export default class UserService {
       email: user.email
     }
 
-    const _put = await APIClient.put(`/api/user-model/${user._id}`, updateUser)
+    const _put = await APIClient.put(`${this.baseURI}/${user._id}`, updateUser)
     return _put;
   }
 

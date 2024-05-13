@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,92 +11,70 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginService from '../../api/services/LoginService';
 import { FormHelperText } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import UserCreatedModal from './components/UserCreatedModal';
+import PageProvider, { usePageContext } from '../../contexts/PageContext';
+import useForm, { compareValues, validateAllFields, validateField } from '../../shared/hooks/useForm';
+import registerForm from '../../shared/hooks/useForm/validations/registerForm';
+import RegisterConfirmDialog from '../../shared/dialogs/RegisterConfirmDialog';
 
-const initUser = {
-  firstname: "",
-  lastname: "",
-  username: "",
-  password: ""
-}
+export default function RegisterPage() {
 
-const initValidation = {
-  firstname: -1,
-  lastname: -1,
-  username: -1,
-  password: -1,
+  const functions = (_page: any, _setPage: any) => ({
+    onSubmit: async (form: any) => {
+      const { field } = form;
+      let isFormValid = validateAllFields(field, form);
+      console.log(field, " fields")
+      if (!isFormValid) {
+        const isMatch = compareValues({password: field.password, confirmPassword: field.confirmPassword})
+        console.log(isMatch, "isMatch passwords")
+        if (isMatch) {
+          const result = await LoginService.init().register(field);
+          console.log(result, "result register")
+          if (result.data === null && result.isOk) {
 
-}
+            _setPage({isError: false, dialog: <RegisterConfirmDialog /> })
+          } else {
+            _setPage({ isError: true, error: "Username is already taken." })
+          }
 
-function Copyright(props: any) {
+      } else {
+          _setPage((prev: any) => ({ ...prev, isError: !isMatch, error: "*Password does not match!" }))
+      }
+
+      } else {
+        _setPage({ isError: isFormValid, error: "*Please enter the required fields." })
+      }
+    },
+    onChange: (evt: any, form: any) => {
+      const field = evt.target
+      validateField(field, form);
+      _setPage({ isError: false });
+    }
+  })
+
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" >
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
+    <PageProvider functions={functions}>
+      <RegisterContent />
+    </PageProvider>
   );
 }
+
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function RegisterPage() {
-  const [newUser, setNewUser] = useState(initUser);
-  const [validation, setValidation] = useState(initValidation);
-  const [error, setError] = useState({ isError: false, message: "" });
-  const [userCreatedModal, setUserCreatedModal] = useState(false);
+function RegisterContent() {
+  const { functions, page } = usePageContext();
+  const form = useForm(registerForm);
 
-  const navigate = useNavigate();
-
-  const handleForm = (e: any) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    if (value.trim().length > 0) {
-      setValidation((prev) => ({ ...prev, [name]: value ? 1 : -1 }));
-    } else {
-      setValidation((prev) => ({ ...prev, [name]: 0 }));
-    }
-    setNewUser((values: any) => ({ ...values, [name]: value }))
-  }
-
-  const handleCreate = () => {
-    verifyAll();
-  }
-
-  const verifyAll = async () => {
-    for (const [name, value] of Object.entries(validation)) {
-      if (value === -1) {
-        setValidation((prev) => ({ ...prev, [name]: value ? 0 : -1 }));
-      }
-    }
-    if (Object.values(validation).some((value) => value !== 1)) {
-      // TODO: if there is invalid value, do something here.
-    } else {
-
-      const result = await LoginService.register(newUser);
-
-      if (result.isError) {
-        setError({ isError: result.isError, message: result.message })
-      } else {
-        // if pass send data.
-        setNewUser(initUser);
-        setValidation(initValidation);
-        setUserCreatedModal(true);
-      }
-
-    }
-  }
+  const { onSubmit, onChange } = functions;
+  const { isError, error } = page;
+  const { field, validate } = form;
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-
+        {page.dialog}
         <Box
           sx={{
             marginTop: 8,
@@ -112,7 +89,7 @@ export default function RegisterPage() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          {error.isError ? <FormHelperText error>{error.message}</FormHelperText> : ""}
+          {isError && <FormHelperText error>{error}</FormHelperText>}
           <Box sx={{ mt: 3 }}>
 
             <Grid container spacing={2}>
@@ -125,10 +102,10 @@ export default function RegisterPage() {
                   id="firstname"
                   label="First Name"
                   autoFocus
-                  value={newUser.firstname}
-                  onChange={handleForm}
-                  error={validation["firstname"] === 0}
-                  helperText={validation["firstname"] === 0 ? "First name is required." : ""}
+                  onChange={(e) => onChange(e, form)}
+                  value={field.firstname}
+                  helperText={validate.firstname.isError && validate.firstname.message}
+                  error={validate.firstname.isError}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -139,10 +116,10 @@ export default function RegisterPage() {
                   label="Last Name"
                   name="lastname"
                   autoComplete="family-name"
-                  onChange={handleForm}
-                  value={newUser.lastname}
-                  error={validation["lastname"] === 0}
-                  helperText={validation["lastname"] === 0 ? "Last name is required." : ""}
+                  onChange={(e) => onChange(e, form)}
+                  value={field.lastname}
+                  helperText={validate.lastname.isError && validate.lastname.message}
+                  error={validate.lastname.isError}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -152,11 +129,10 @@ export default function RegisterPage() {
                   id="username"
                   label="Username"
                   name="username"
-                  value={newUser.username}
-                  autoComplete="username"
-                  onChange={handleForm}
-                  error={validation["username"] === 0}
-                  helperText={validation["username"] === 0 ? "Username is required." : ""}
+                  onChange={(e) => onChange(e, form)}
+                  value={field.username}
+                  helperText={validate.username.isError && validate.username.message}
+                  error={validate.username.isError}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -167,11 +143,24 @@ export default function RegisterPage() {
                   label="Password"
                   type="password"
                   id="password"
-                  value={newUser.password}
-                  autoComplete="new-password"
-                  onChange={handleForm}
-                  error={validation["password"] === 0}
-                  helperText={validation["password"] === 0 ? "Password is required." : ""}
+                  onChange={(e) => onChange(e, form)}
+                  value={field.password}
+                  helperText={validate.password.isError && validate.password.message}
+                  error={validate.password.isError}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  label="Password"
+                  type="password"
+                  id="confirmPassword"
+                  onChange={(e) => onChange(e, form)}
+                  value={field.confirmPassword}
+                  helperText={validate.confirmPassword.isError && validate.confirmPassword.message}
+                  error={validate.confirmPassword.isError}
                 />
               </Grid>
             </Grid>
@@ -180,7 +169,7 @@ export default function RegisterPage() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={handleCreate}
+              onClick={() => onSubmit(form)}
             >
               Sign Up
             </Button>
@@ -194,8 +183,23 @@ export default function RegisterPage() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />
-        <UserCreatedModal userCreatedModal={userCreatedModal} setUserCreatedModal={setUserCreatedModal} />
+   
       </Container>
     </ThemeProvider>
+  );
+}
+
+
+
+function Copyright(props: any) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © '}
+      <Link color="inherit" >
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
   );
 }

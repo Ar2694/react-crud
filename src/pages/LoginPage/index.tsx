@@ -23,18 +23,7 @@ import PageProvider, { usePageContext } from '../../contexts/PageContext';
 
 import "./styles.css";
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" >
-        Arlix Sorto
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -45,15 +34,15 @@ export default function LoginPage() {
   const isAuthenticated = useIsAuthenticated();
 
   const functions = (_page: any, _setPage: any) => ({
-    onSubmit: async(form:any)=>{
+    onSubmit: async (form: any) => {
       const { field } = form;
       let isFormValid = validateAllFields(field, form);
 
       if (!isFormValid) {
-        const result =  await LoginService.login(field);
+        const result = await LoginService.init().login(field);
 
         if (result.data && result.isOk) {
-          try{
+          try {
 
             const isSignIn = signIn({
               auth: {
@@ -65,11 +54,11 @@ export default function LoginPage() {
 
             if (isSignIn) {
               navigate("/");
-            }else{
+            } else {
               _setPage({ isError: true, error: "Sorry! Something went wrong..." })
-            } 
+            }
 
-          }catch(e){
+          } catch (e) {
             _setPage({ isError: true, error: "Sorry! Something went wrong..." })
             console.log(e);
           }
@@ -84,123 +73,139 @@ export default function LoginPage() {
       const field = evt.target
       validateField(field, form)
       _setPage({ isError: false })
-  }
+    }
   })
 
-  useEffect(()=>{
-    if(isAuthenticated){
+  useEffect(() => {
+    if (isAuthenticated) {
       navigate("/");
     }
-  },[])
-  
+  }, [])
+
   return (
-   <PageProvider functions={functions}>
-    <LoginContent />
-   </PageProvider>
+    <PageProvider functions={functions}>
+      <LoginContent />
+    </PageProvider>
   );
 }
 
-function LoginContent(){
-  const {functions,page} = usePageContext();
-  const {onSubmit, onChange} = functions;
-  const {isError, error} = page;
+function LoginContent() {
+  const { functions, page } = usePageContext();
   const form = useForm(loginForm);
+
+  const { onSubmit, onChange } = functions;
+  const { isError, error } = page;
+
   const { field, validate } = form;
 
-  return(
+  return (
     <ThemeProvider theme={defaultTheme}>
-    <Grid container component="main" sx={{ height: '100vh' }}>
-      <CssBaseline />
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: (t) =>
-            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box
+      <Grid container component="main" sx={{ height: '100vh' }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
           sx={{
-            my: 8,
-            mx: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
           }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Login
-          </Typography>
-
-          <Box component="form" noValidate sx={{ mt: 1 }}>
-            {isError && <FormHelperText error>{error}</FormHelperText> }
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
-              onChange={(e) => onChange(e, form)}
-              value={field.username}
-              helperText={validate.username.isError && validate.username.message}
-              error={validate.username.isError}
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              value={field.password}
-              onChange={(e) => onChange(e, form)}
-              error={validate.password.isError}
-              helperText={validate.password.isError && validate.password.message}
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={() => onSubmit(form)}
-            >
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
               Login
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="/forgot" variant="body2">
-                  Forgot password?
-                </Link>
+            </Typography>
+
+            <Box component="form" noValidate sx={{ mt: 1 }}>
+              {isError && <FormHelperText error>{error}</FormHelperText>}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                onChange={(e) => onChange(e, form)}
+                value={field.username}
+                helperText={validate.username.isError && validate.username.message}
+                error={validate.username.isError}
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                value={field.password}
+                onChange={(e) => onChange(e, form)}
+                error={validate.password.isError}
+                helperText={validate.password.isError && validate.password.message}
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => onSubmit(form)}
+              >
+                Login
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="/forgot" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="/register" variant="body2">
+                    {"Create Account"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href="/register" variant="body2">
-                  {"Create Account"}
-                </Link>
-              </Grid>
-            </Grid>
-            <Copyright sx={{ mt: 5 }} />
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
           </Box>
-        </Box>
+        </Grid>
       </Grid>
-    </Grid>
-  </ThemeProvider>
+    </ThemeProvider>
   )
+}
+
+
+function Copyright(props: any) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © '}
+      <Link color="inherit" >
+        Arlix Sorto
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
 }

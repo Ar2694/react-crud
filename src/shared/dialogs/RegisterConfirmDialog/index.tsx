@@ -1,19 +1,14 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import { Grid } from '@mui/material';
+import { Dialog, Grid } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useNavigate } from 'react-router-dom';
+import DialogProvider, { useDialogContext } from '../../../contexts/DialogContext';
 
 import "./styles.css";
 
-import { useNavigate } from 'react-router-dom';
-
 const style = {
-    position: 'absolute' as 'absolute',
-    top: '30%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
     border: '2px solid #000',
@@ -21,24 +16,34 @@ const style = {
     p: 4,
 };
 
-export default function ResetConfirmModal(props: any) {
-    const show = props.resetConfirmModal;
-    const close = props.setResetConfirmModal;
+export default function RegisterConfirmDialog() {
     const navigate = useNavigate();
 
-    const handleButton = () => {
-        close(false);
-        navigate("/login")
-    }
+    const functions = (_state: any, _setState: any) => ({
+        onLogin: () => {
+            navigate("/login")
+        }
+    })
 
     return (
-        <Modal className="user-create-modal" open={show}>
+        <DialogProvider functions={functions} >
+            <RegisterConfirmContent />
+        </DialogProvider>
+    );
+}
+
+function RegisterConfirmContent() {
+    const { dialog, functions } = useDialogContext();
+    const { onLogin } = functions;
+
+    return (
+        <Dialog className="register-confirm-dialog" open={dialog}>
             <Box sx={style}>
                 <Grid className="icon-container" container justifyContent="center">
                     <CheckCircleIcon />
                 </Grid>
                 <Typography className="title" gutterBottom={true}>
-                    Your password has reset successfully!
+                    User created successfully!
                 </Typography>
                 <Grid
                     container
@@ -46,10 +51,10 @@ export default function ResetConfirmModal(props: any) {
                     justifyContent="center"
                     columnGap={3}
                 >
-                    <Button variant="contained" onClick={handleButton}>Go to login</Button>
+                    <Button variant="contained" onClick={onLogin}>Go to login</Button>
                 </Grid>
             </Box>
-        </Modal>
+        </Dialog>
 
     );
 }
