@@ -13,17 +13,15 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import LoginService from '../../api/services/LoginService';
+import LoginService from 'api/services/LoginService/LoginService';
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { FormHelperText } from '@mui/material';
-import useForm, { validateAllFields, validateField } from '../../shared/hooks/useForm';
-import loginForm from '../../shared/hooks/useForm/validations/loginForm';
-import PageProvider, { usePageContext } from '../../contexts/PageContext';
+import useForm, { validateAllFields, validateField } from 'shared/hooks/useForm';
+import loginForm from 'shared/hooks/useForm/validations/loginForm';
+import PageProvider, { usePageContext } from 'contexts/PageContext';
 
 import "./styles.css";
-
-
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();

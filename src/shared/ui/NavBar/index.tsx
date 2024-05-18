@@ -2,7 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser'
-import { Login } from '../../../interfaces/LoginInterface';
+import { Login } from 'interfaces/LoginInterface';
 import useSignOut from 'react-auth-kit/hooks/useSignOut'
 import { useNavigate } from 'react-router-dom';
 import { Link, Typography } from '@mui/material';

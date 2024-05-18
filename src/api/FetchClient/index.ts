@@ -1,4 +1,4 @@
-import { HttpMethod, HttpStatusCode, StatusCode } from "./options";
+import { HttpMethod, HttpStatusCode, StatusCode } from "api/FetchClient/options";
 
 interface HttpOptions {
   method: HttpMethod,

@@ -1,14 +1,14 @@
 import {  Grid, TextField } from "@mui/material";
-import BaseLayout from "../../shared/containers/BaseLayout";
-import UsersTable from "./components/UserTable";
+import BaseLayout from "shared/containers/BaseLayout";
+import UsersTable from "pages/HomePage/components/UserTable";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
-import UserService from "../../api/services/UserService";
-import PageProvider, { usePageContext } from "../../contexts/PageContext";
-import CreateModal from "../../shared/modals/CreateModal";
+import UserService from "api/services/UserService";
+import PageProvider, { usePageContext } from "contexts/PageContext";
+import CreateModal from "shared/modals/CreateModal";
 
 import "./styles.css";
 
-export function HomePage() {
+export default function HomePage() {
   const functions = (_page: any, _setPage: any) => ({
     searchUsers: async (evt: any) => {
       const search = evt.target.value;

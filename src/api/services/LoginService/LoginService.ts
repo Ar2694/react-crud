@@ -1,5 +1,5 @@
-import { Login } from "../../interfaces/LoginInterface";
-import APIClient from "../APIClient";
+import { Login } from "interfaces/LoginInterface";
+import APIClient from "api/APIClient";
 
 export default class LoginService {
   private baseURI: string;

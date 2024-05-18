@@ -3,11 +3,11 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { FormControl, FormHelperText, Grid, TextField } from '@mui/material';
-import ModalProvider, { useModalContext } from '../../../contexts/ModalContext';
-import useForm, { validateAllFields, validateField } from '../../hooks/useForm';
-import UserService from '../../../api/services/UserService';
-import { usePageContext } from '../../../contexts/PageContext';
-import createModalForm from '../../hooks/useForm/validations/createModalForm';
+import ModalProvider, { useModalContext } from 'contexts/ModalContext';
+import useForm, { validateAllFields, validateField } from 'shared/hooks/useForm';
+import UserService from 'api/services/UserService';
+import { usePageContext } from 'contexts/PageContext';
+import createModalForm from 'shared/hooks/useForm/validations/createModalForm';
 
 
 const style = {

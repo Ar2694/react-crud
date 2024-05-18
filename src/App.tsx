@@ -1,14 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blueGrey } from '@mui/material/colors';
-import { HomePage } from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import HomePage  from "pages/HomePage";
+import LoginPage from "pages/LoginPage";
+import RegisterPage from "pages/RegisterPage";
 import createStore from "react-auth-kit/createStore";
 import AuthProvider from "react-auth-kit/AuthProvider";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ForgotPasswordPage from "pages/ForgotPasswordPage";
 
-import "./App.css";
+import "App.css";
 
 const theme = createTheme({
   palette: {

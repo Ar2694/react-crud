@@ -1,4 +1,4 @@
-import hasLength from "../../validators/hasLength"
+import hasLength from "shared/hooks/useForm/validators/hasLength"
 
 const createModalForm = {
     field: {

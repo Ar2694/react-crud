@@ -1,5 +1,5 @@
-import { User } from "../../../interfaces/UserInterface";
-import APIClient from "../../APIClient";
+import { User } from "interfaces/UserInterface";
+import APIClient from "api/APIClient";
 
 
 export default class UserService {

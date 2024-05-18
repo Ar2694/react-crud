@@ -1,9 +1,9 @@
 import { Box, Button, FormHelperText, TextField } from "@mui/material";
-import useForm from "../../../../shared/hooks/useForm";
-import { usePageContext } from "../../../../contexts/PageContext";
-import resetPasswordForm from "../../../../shared/hooks/useForm/validations/resetPasswordForm";
+import useForm from "shared/hooks/useForm";
+import { usePageContext } from "contexts/PageContext";
+import resetPasswordForm from "shared/hooks/useForm/validations/resetPasswordForm";
 
-export default function ResetPassword(props: any) {
+export default function ResetPassword() {
     const form = useForm(resetPasswordForm);
     const { field, validate } = form;
     const { functions, page } = usePageContext();

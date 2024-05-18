@@ -9,12 +9,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import LoginService from '../../api/services/LoginService';
+import LoginService from 'api/services/LoginService/LoginService';
 import { FormHelperText } from '@mui/material';
-import PageProvider, { usePageContext } from '../../contexts/PageContext';
-import useForm, { compareValues, validateAllFields, validateField } from '../../shared/hooks/useForm';
-import registerForm from '../../shared/hooks/useForm/validations/registerForm';
-import RegisterConfirmDialog from '../../shared/dialogs/RegisterConfirmDialog';
+import PageProvider, { usePageContext } from 'contexts/PageContext';
+import useForm, { compareValues, validateAllFields, validateField } from 'shared/hooks/useForm';
+import registerForm from 'shared/hooks/useForm/validations/registerForm';
+import RegisterConfirmDialog from 'shared/dialogs/RegisterConfirmDialog';
 
 export default function RegisterPage() {
 

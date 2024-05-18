@@ -1,5 +1,5 @@
-import { HttpMethod } from "../FetchClient/options";
-import FetchClient from "../FetchClient";
+import { HttpMethod } from "api/FetchClient/options";
+import FetchClient from "api/FetchClient";
 
 export default class APIClient {
 

@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { Dialog, Grid } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from 'react-router-dom';
-import DialogProvider, { useDialogContext } from '../../../contexts/DialogContext';
+import DialogProvider, { useDialogContext } from 'contexts/DialogContext';
 
 import "./styles.css";
 

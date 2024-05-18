@@ -4,10 +4,9 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Grid } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useNavigate } from 'react-router-dom';
 
 import "./styles.css";
-
-import { useNavigate } from 'react-router-dom';
 
 const style = {
     position: 'absolute' as 'absolute',

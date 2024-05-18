@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 import React, { useContext, useState } from "react";
 
 const ModalContext = React.createContext<any | null>(null);

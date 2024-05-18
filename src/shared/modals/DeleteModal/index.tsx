@@ -3,9 +3,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { FormHelperText, Grid } from '@mui/material';
-import ModalProvider, { useModalContext } from '../../../contexts/ModalContext';
-import UserService from '../../../api/services/UserService';
-import { usePageContext } from '../../../contexts/PageContext';
+import ModalProvider, { useModalContext } from 'contexts/ModalContext';
+import UserService from 'api/services/UserService';
+import { usePageContext } from 'contexts/PageContext';
 
 const style = {
     position: 'absolute' as 'absolute',

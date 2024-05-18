@@ -1,13 +1,7 @@
-import React, { useContext, useReducer, useState } from "react";
-
-// Props typefor UsersProviderProps
-interface UsersProviderProps {
-    children: React.ReactNode;
-}
+import React, { useContext, useState } from "react";
 
 const PageContext = React.createContext<any | null>(null);
 
-// create user provider
 export default function PageProvider(props: any) {
     const [page, setPage] = useState({});
     
