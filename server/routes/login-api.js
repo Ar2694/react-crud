@@ -128,12 +128,13 @@ router.post("/register", async (req, res) => {
 router.put("/forgot-password", async (req, res) => {
   try {
     const user = await Login.findOne({ username: req.body.username });
-
+    console.log( req.body, " req.body")
     if (user) {
 
       const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
-      const result = user.set({ password: hashedPassword });
-      const forgotPasswordResponse = new BaseResponse(200, "Query Successful", result);
+      user.set({ password: hashedPassword }).save();
+
+      const forgotPasswordResponse = new BaseResponse(200, "Query Successful", {});
       return res.json(forgotPasswordResponse.toObject());
 
     } else {

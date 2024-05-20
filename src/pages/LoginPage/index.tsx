@@ -97,7 +97,7 @@ function LoginContent() {
   const { field, validate } = form;
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -190,7 +190,6 @@ function LoginContent() {
           </Box>
         </Grid>
       </Grid>
-    </ThemeProvider>
   )
 }
 

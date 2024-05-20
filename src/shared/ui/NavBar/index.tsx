@@ -24,9 +24,9 @@ export default function Navbar() {
     navigate('/login');
   }
   return (
-    <Box sx={{ flexGrow: 1 }} className="nav-bar">
+   
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             React CRUD
           </Typography>
@@ -39,6 +39,6 @@ export default function Navbar() {
             :  <Link component="button" underline="none" onClick={login} color="inherit">Login</Link>}
         </Toolbar>
       </AppBar>
-    </Box>
+
   );
 }

@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { blueGrey } from '@mui/material/colors';
+
+// Pages
 import HomePage  from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
 import RegisterPage from "pages/RegisterPage";
@@ -8,19 +8,8 @@ import createStore from "react-auth-kit/createStore";
 import AuthProvider from "react-auth-kit/AuthProvider";
 import ForgotPasswordPage from "pages/ForgotPasswordPage";
 
-import "App.css";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#006064'
-    },
-    secondary: {
-      main: blueGrey[500]
-    },
-  },
-});
-
+// App theme
+import AppTheme from "shared/themes/AppTheme";
 
 const store = createStore({
   authName: '_auth',
@@ -32,7 +21,7 @@ const store = createStore({
 export default function App() {
 
   return (
-    <ThemeProvider theme={theme}>
+    <AppTheme>
       <AuthProvider store={store}>
         <BrowserRouter>
           <Routes>
@@ -43,8 +32,7 @@ export default function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
-
-    </ThemeProvider>
+    </AppTheme>
   )
 }
 

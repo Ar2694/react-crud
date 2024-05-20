@@ -15,7 +15,6 @@ import ResetConfirmDialog from "shared/dialogs/ResetConfirmDialog";
 
 import "./styles.css";
 
-const defaultTheme = createTheme();
 
 export default function ForgotPasswordPage() {
 
@@ -25,14 +24,14 @@ export default function ForgotPasswordPage() {
             let isFormValid = validateAllFields(field, form);
 
             if (!isFormValid) {
-                const isMatch = compareValues({password: field.password, confirmPassword: field.confirmPassword})
-     
+                const isMatch = compareValues({ password: field.password, confirmPassword: field.confirmPassword })
+
                 if (isMatch) {
 
-                    const result =  await LoginService.init().resetPassword({ username: page.username, password: field.confirmPassword })
+                    const result = await LoginService.init().resetPassword({ username: page.username, password: field.confirmPassword })
 
                     if (result.data && result.isOk) {
-      
+
                         setPage({ username: field.username, isError: false, children: <ResetPassword />, dialog: <ResetConfirmDialog /> })
 
                     } else {
@@ -85,30 +84,28 @@ export function ForgotPasswordContent() {
     }, [])
 
     return (
-        <ThemeProvider theme={defaultTheme}>
-            <Container component="main">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        paddingTop: 8,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                    }}
-                >
-                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Forgot password?
-                    </Typography>
+        <Container component="main">
+            <CssBaseline />
+            <Box
+                sx={{
+                    paddingTop: 8,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}
+            >
+                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Forgot password?
+                </Typography>
 
-                    {page.children}
-                    {page.dialog}
+                {page.children}
+                {page.dialog}
 
-                </Box>
-            </Container>
-        </ThemeProvider>
+            </Box>
+        </Container>
     );
 }
 

@@ -40,10 +40,10 @@ function ResetConfirmContent() {
         <Dialog className="reset-confirm-dialog" open={dialog}>
             <Box sx={style}>
                 <Grid className="icon-container" container justifyContent="center">
-                    <CheckCircleIcon />
+                    <CheckCircleIcon color="success"/>
                 </Grid>
                 <Typography className="title" gutterBottom={true}>
-                    Your password has reset successfully!
+                    Your password has reset!
                 </Typography>
                 <Grid
                     container
