@@ -1,17 +1,15 @@
+
 import { useMemo } from "react";
 import { useMediaQuery } from "@mui/material";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
-import lightTheme from "shared/themes/AppTheme/options/lightTheme";
-import darkTheme from "shared/themes/AppTheme/options/darkTheme";
+import theme from "shared/themes/AppTheme/theme";
 
-import "fonts.css";
+export default function AppTheme(props: any) {
+  const mode = useMediaQuery('(prefers-color-scheme: dark)');
+  const appTheme = useMemo(() => theme(mode), [mode]);
 
-export default function AppTheme(props:any){
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const appTheme = useMemo(()=> createTheme(prefersDarkMode ? darkTheme : lightTheme), [prefersDarkMode]);
-
-  return(
+  return (
     <ThemeProvider theme={appTheme}>
       <CssBaseline />
       {props.children}

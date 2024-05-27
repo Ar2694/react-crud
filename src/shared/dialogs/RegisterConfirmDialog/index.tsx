@@ -6,16 +6,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from 'react-router-dom';
 import DialogProvider, { useDialogContext } from 'contexts/DialogContext';
 
-import "./styles.css";
-
-const style = {
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
 export default function RegisterConfirmDialog() {
     const navigate = useNavigate();
 
@@ -38,7 +28,7 @@ function RegisterConfirmContent() {
 
     return (
         <Dialog className="register-confirm-dialog" open={dialog}>
-            <Box sx={style}>
+            <Box>
                 <Grid className="icon-container" container justifyContent="center">
                     <CheckCircleIcon />
                 </Grid>

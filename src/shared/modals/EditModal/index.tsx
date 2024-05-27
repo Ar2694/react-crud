@@ -5,23 +5,9 @@ import Modal from '@mui/material/Modal';
 import { FormControl, FormHelperText, Grid, TextField } from '@mui/material';
 import ModalProvider, { useModalContext } from 'contexts/ModalContext';
 import useForm, { validateField, validateForm } from 'shared/hooks/useForm';
-import editModalForm from 'shared/hooks/useForm/validations/editModalForm';
+import editModalForm from '../../hooks/useForm/validations/editModalForm';
 import UserService from 'api/services/UserService';
 import { usePageContext } from 'contexts/PageContext';
-
-import "../styles.css";
-
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
 
 export default function EditModal(props: any) {
     const button = props.button ?? <Button variant="text" color="secondary">Edit</Button>;
@@ -67,10 +53,10 @@ export function EditModalContent() {
     const { onChange, user, onSubmit } = functions;
     const form = useForm(editModalForm(user));
     const { field, validate } = form;
-
+    console.log(form)
     return (
         <Modal className="modal edit-modal" open={modal}>
-            <Box sx={style} >
+            <Box>
                 <Typography id="id-id-title" variant='h5' gutterBottom={true}>
                     Edit User
                 </Typography>

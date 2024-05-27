@@ -23,7 +23,7 @@ const style = {
 };
 
 export default function CreateModal(props: any) {
-    const button = props.button ?? <Button variant="contained" color="secondary" >Create User</Button>;
+    const button = props.button ?? <Button variant="contained" color="secondary" fullWidth>Create User</Button>;
     const { functions: pageFunc } = usePageContext();
     const { getUsers } = pageFunc;
 

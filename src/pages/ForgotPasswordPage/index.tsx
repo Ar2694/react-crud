@@ -5,16 +5,12 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LoginService from 'api/services/LoginService/LoginService';
 import PageProvider, { usePageContext } from "contexts/PageContext";
 import FindUsername from "pages/ForgotPasswordPage/components/FindUsername";
 import { compareValues, validateAllFields, validateField } from "shared/hooks/useForm";
 import ResetPassword from "pages/ForgotPasswordPage/components/ResetPassword";
 import ResetConfirmDialog from "shared/dialogs/ResetConfirmDialog";
-
-import "./styles.css";
-
 
 export default function ForgotPasswordPage() {
 

@@ -6,20 +6,6 @@ import { Grid } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from 'react-router-dom';
 
-import "./styles.css";
-
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '30%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
 export default function UserCreatedModal(props: any) {
     const show = props.userCreatedModal;
     const close = props.setUserCreatedModal;
@@ -32,7 +18,7 @@ export default function UserCreatedModal(props: any) {
 
     return (
         <Modal className="user-create-modal" open={show}>
-            <Box sx={style}>
+            <Box>
                 <Grid className="icon-container" container justifyContent="center">
                     <CheckCircleIcon />
                 </Grid>

@@ -6,18 +6,16 @@ import UserService from "api/services/UserService";
 import PageProvider, { usePageContext } from "contexts/PageContext";
 import CreateModal from "shared/modals/CreateModal";
 
-import "./styles.css";
-
 export default function HomePage() {
-  const functions = (_page: any, _setPage: any) => ({
+  const functions = (_page: any, setPage: any) => ({
     searchUsers: async (evt: any) => {
       const search = evt.target.value;
       const users = await UserService.init().searchUsers(search);
-    _setPage((prev: any) => ({ ...prev, users }));
+    setPage((prev: any) => ({ ...prev, users }));
     },
     getUsers: async () => {
       const users = await UserService.init().getUsers();
-      _setPage((prev: any) => ({ ...prev, users }));
+      setPage((prev: any) => ({ ...prev, users }));
     }
   })
 
@@ -35,11 +33,12 @@ function Home(_props: any) {
 
   return (
     <BaseLayout className="home-page">
-      <Grid container alignItems="center" justifyContent="center" className="search-container">
-        <Grid item xs>
-          <TextField placeholder="Search" name="search" onChange={searchUsers} variant="outlined" fullWidth className="search-input" />
+      <Grid sx={{alignItems:"center", marginBottom: 2}} container spacing={2}>
+        <Grid item xs={12} sm>
+          <TextField placeholder="Search" name="search" onChange={searchUsers} variant="outlined" fullWidth/>
         </Grid>
-        {isAuthenticated && <Grid item xs={2} className="button-container">
+        {isAuthenticated && 
+        <Grid item xs={12} sm="auto">
           <CreateModal />
         </Grid>}
       </Grid>
