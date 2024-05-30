@@ -2,10 +2,10 @@ import { ThemeOptions } from "@mui/material/styles";
 
 const components: ThemeOptions = {
   components: {
-    MuiTextField:{
-      defaultProps:{
-        sx:(theme) =>({
-          backgroundColor: theme.palette.mode === "light" ? "#FFFFFF": ""
+    MuiTextField: {
+      defaultProps: {
+        sx: (theme) => ({
+          backgroundColor: theme.palette.mode === "light" ? "#FFFFFF" : ""
         })
       }
     },
@@ -23,11 +23,43 @@ const components: ThemeOptions = {
             boxShadow: 24,
             p: 4,
           },
-          "& .MuiFormControl-root":{
+          "& .MuiFormControl-root": {
             marginBottom: 3
           }
         },
       },
+    },
+    MuiDialog: {
+      defaultProps: {
+        sx: {
+          "& .MuiPaper-root": {
+            overflow: "unset",
+            position: "unset"
+          },
+          "& .MuiBox-root": {
+            width: 400,
+            textAlign: "center",
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          },
+          "& .MuiTypography-root": {
+            margin: "15px 0 25px 0"
+          },
+          "& .MuiSvgIcon-root": {
+            width: 32,
+            height: 32,
+          }
+        }
+      }
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          marginLeft: 0
+        }
+      }
     }
   }
 };

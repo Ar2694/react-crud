@@ -6,21 +6,11 @@ import { FormHelperText, Grid } from '@mui/material';
 import ModalProvider, { useModalContext } from 'contexts/ModalContext';
 import UserService from 'api/services/UserService';
 import { usePageContext } from 'contexts/PageContext';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '30%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
 
 export default function DeleteModal(props: any) {
-    const button = props.button ?? <Button variant="text" color="secondary">Delete</Button>;
+    const button = props.button ?? <DeleteIcon color="secondary"/>;
     const { functions: pageFunc } = usePageContext();
     const { getUsers } = pageFunc;
 
@@ -51,7 +41,7 @@ function DeleteModalContent() {
 
     return (
         <Modal className="delete-modal" open={modal}>
-            <Box sx={style}>
+            <Box>
                 <Typography id="id-id-title" gutterBottom={true}>
                     Are you sure you want to delete this user?
                 </Typography>

@@ -30,7 +30,7 @@ function RegisterConfirmContent() {
         <Dialog className="register-confirm-dialog" open={dialog}>
             <Box>
                 <Grid className="icon-container" container justifyContent="center">
-                    <CheckCircleIcon />
+                    <CheckCircleIcon color="success" />
                 </Grid>
                 <Typography className="title" gutterBottom={true}>
                     User created successfully!

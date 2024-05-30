@@ -8,7 +8,6 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginService from 'api/services/LoginService/LoginService';
 import { FormHelperText } from '@mui/material';
 import PageProvider, { usePageContext } from 'contexts/PageContext';
@@ -59,9 +58,6 @@ export default function RegisterPage() {
 }
 
 
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
-
 function RegisterContent() {
   const { functions, page } = usePageContext();
   const form = useForm(registerForm);
@@ -71,7 +67,7 @@ function RegisterContent() {
   const { field, validate } = form;
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+ 
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         {page.dialog}
@@ -185,7 +181,6 @@ function RegisterContent() {
         <Copyright sx={{ mt: 5 }} />
    
       </Container>
-    </ThemeProvider>
   );
 }
 

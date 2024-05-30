@@ -8,9 +8,10 @@ import useForm, { validateField, validateForm } from 'shared/hooks/useForm';
 import editModalForm from '../../hooks/useForm/validations/editModalForm';
 import UserService from 'api/services/UserService';
 import { usePageContext } from 'contexts/PageContext';
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function EditModal(props: any) {
-    const button = props.button ?? <Button variant="text" color="secondary">Edit</Button>;
+    const button = props.button ?? <EditIcon color="secondary" />;
     const { functions: pageFunc } = usePageContext();
     const { getUsers } = pageFunc;
 
