@@ -7,7 +7,7 @@ import ModalProvider, { useModalContext } from 'contexts/ModalContext';
 import useForm, { validateAllFields, validateField } from 'shared/hooks/useForm';
 import UserService from 'api/services/UserService';
 import { usePageContext } from 'contexts/PageContext';
-import createModalForm from 'shared/hooks/useForm/validations/createModalForm';
+import createModalForm from 'shared/hooks/useForm/forms/createModalForm';
 
 
 const style = {
@@ -24,7 +24,7 @@ const style = {
 
 export default function CreateModal(props: any) {
     const button = props.button ?? <Button variant="contained" color="secondary" fullWidth>Create User</Button>;
-    const { functions: pageFunc } = usePageContext();
+    const { functions: pageFunc, setData } = usePageContext();
     const { getUsers } = pageFunc;
 
     const functions = (_state: any, _setState: any) => ({
@@ -35,11 +35,11 @@ export default function CreateModal(props: any) {
             let isFormValid = validateAllFields(field, form);
 
             if (!isFormValid) {
-                const result = await UserService.init().createUser(field);
+                const result = await UserService.createUser(field);
 
                 if (result && result.isOk) {
-                    _setState({ isError: false })
-                    getUsers();
+                    const users = await UserService.getUsers();
+                    setData(users);
                     close();
                 } else {
                     _setState({ isError: true, error: "Sorry! Something went wrong..." })

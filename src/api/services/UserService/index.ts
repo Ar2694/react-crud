@@ -9,17 +9,13 @@ export default class UserService {
     this.baseURI = baseURI;
   }
 
-  static init() {
-    return new UserService("/api/user-model");
-  }
-
   // getUsers
   getUsers = async () => {
     const _get = await APIClient.get(`${this.baseURI}/`)
     return _get.data;
   }
 
-  // getUsers
+  // searchUsers
   searchUsers = async (query: any) => {
     const _get = await APIClient.get(`${this.baseURI}/search/${query}`)
     return _get.data;
@@ -66,4 +62,46 @@ export default class UserService {
     return _put;
   }
 
+  // Static methods
+  static init() {
+    return new UserService("/api/user-model");
+  }
+
+  // getUsers
+  static getUsers = async () => {
+    const _get = await UserService.init().getUsers();
+    return _get;
+  }
+
+  // getUsers
+  static searchUsers = async (query: any) => {
+    const _get = await UserService.init().searchUsers(query);
+    return _get;
+  }
+
+
+  // findAUser
+  static findAUser = async (id: string) => {
+    const _get = await UserService.init().findAUser(id);
+    return _get;
+  }
+
+  // deleteUser
+  static deleteUser = async (id: string) => {
+    const _delete = await UserService.init().deleteUser(id);
+    return _delete;
+
+  }
+
+  // createUser
+  static createUser = async (user: User) => {
+    const _post = await UserService.init().createUser(user);
+    return _post;
+  }
+
+  //updateUser
+  static updateUser = async (user: User) => {
+    const _put = await UserService.init().updateUser(user);
+    return _put;
+  }
 }

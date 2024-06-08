@@ -5,15 +5,14 @@ import Modal from '@mui/material/Modal';
 import { FormControl, FormHelperText, Grid, TextField } from '@mui/material';
 import ModalProvider, { useModalContext } from 'contexts/ModalContext';
 import useForm, { validateField, validateForm } from 'shared/hooks/useForm';
-import editModalForm from '../../hooks/useForm/validations/editModalForm';
+import editModalForm from '../../hooks/useForm/forms/editModalForm';
 import UserService from 'api/services/UserService';
 import { usePageContext } from 'contexts/PageContext';
 import EditIcon from '@mui/icons-material/Edit';
 
 export default function EditModal(props: any) {
     const button = props.button ?? <EditIcon color="secondary" />;
-    const { functions: pageFunc } = usePageContext();
-    const { getUsers } = pageFunc;
+    const { functions: pageFunc, setData } = usePageContext();
 
     const functions = (_state: any, _setState: any) => ({
         user: props.user,
@@ -22,11 +21,11 @@ export default function EditModal(props: any) {
 
             if (!isFormValid) {
                 const { field } = form;
-                const result = await UserService.init().updateUser(field);
+                const result = await UserService.updateUser(field);
 
                 if (result && result.isOk && result.data.acknowledged) {
-                    _setState({ isError: false })
-                    getUsers();
+                    const users = await UserService.getUsers();
+                    setData(users);
                     close();
                 } else {
                     _setState({ isError: true, error: "Sorry! Something went wrong..." })

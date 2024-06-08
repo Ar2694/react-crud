@@ -1,6 +1,6 @@
 import { Box, Button, FormHelperText, TextField } from "@mui/material";
 import useForm from "shared/hooks/useForm";
-import findUsernameForm from "shared/hooks/useForm/validations/findUsernameForm";
+import findUsernameForm from "shared/hooks/useForm/forms/findUsernameForm";
 import { usePageContext } from "contexts/PageContext";
 
 export default function FindUsername() {

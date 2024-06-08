@@ -1,6 +1,6 @@
 import hasLength from "shared/hooks/useForm/validators/hasLength"
 
-const findUsernameForm = {
+const findUsernameForm: Object = {
     field: {
         username: "",
     },

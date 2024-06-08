@@ -17,7 +17,7 @@ import useSignIn from 'react-auth-kit/hooks/useSignIn';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { FormHelperText } from '@mui/material';
 import useForm, { validateAllFields, validateField } from 'shared/hooks/useForm';
-import loginForm from 'shared/hooks/useForm/validations/loginForm';
+import loginForm from 'shared/hooks/useForm/forms/loginForm';
 import PageProvider, { usePageContext } from 'contexts/PageContext';
 
 

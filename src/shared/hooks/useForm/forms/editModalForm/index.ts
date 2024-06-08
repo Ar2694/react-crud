@@ -1,6 +1,6 @@
 import hasLength from "shared/hooks/useForm/validators/hasLength"
 
-export default function editModalForm(users:any) {
+export default function editModalForm(users:any):Object {
     return {
         field: { ...users },
         validate: {

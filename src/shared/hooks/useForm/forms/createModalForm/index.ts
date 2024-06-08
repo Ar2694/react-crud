@@ -1,46 +1,46 @@
 import hasLength from "shared/hooks/useForm/validators/hasLength"
 
-const registerForm = {
+const createModalForm: Object = {
     field: {
         firstname: "",
         lastname: "",
-        username: "",
-        password: "",
-        confirmPassword: ""
+        phoneNumber: "",
+        address: "",
+        email: ""
     },
     validate: {
         firstname: {
             rule: hasLength,
             options: { min: 1 },
             isError: false,
-            message: "Please enter your first name."
+            message: "First name is required."
         },
         lastname: {
             rule: hasLength,
             options: { min: 1 },
             isError: false,
-            message: "Please enter your last name."
+            message: "Last name is required."
         },
-        username: {
+        phoneNumber: {
             rule: hasLength,
             options: { min: 1 },
             isError: false,
-            message: "Please enter your username."
+            message: "Phone number is required."
         },
-        password: {
+        address: {
             rule: hasLength,
             options: { min: 1 },
             isError: false,
-            message: "Please enter your password."
+            message: "Address is required."
         },
-        confirmPassword: {
+        email: {
             rule: hasLength,
             options: { min: 1 },
             isError: false,
-            message: "Please confirm your password."
-        }
+            message: "Email is required."
+        },
     },
 
 }
 
-export default registerForm;
+export default createModalForm;

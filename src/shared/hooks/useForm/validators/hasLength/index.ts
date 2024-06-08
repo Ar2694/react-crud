@@ -1,4 +1,4 @@
-export default function hasLength(options: any, _value: any) {
+export default function hasLength(options: any, _value: any): Boolean {
     const { min, max } = options;
     let isError = false;
     let value = _value;

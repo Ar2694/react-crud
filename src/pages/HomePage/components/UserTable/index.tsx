@@ -5,7 +5,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useEffect } from "react";
 import DeleteModal from 'shared/modals/DeleteModal';
 import EditModal from 'shared/modals/EditModal';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
@@ -13,14 +12,11 @@ import { usePageContext } from 'contexts/PageContext';
 
 
 export default function UsersTable(_props: any) {
-  const {functions, page} = usePageContext();
-  const { getUsers} = functions;
-  const data = page.users ?? [];
+  const { page} = usePageContext();
+  const { data } = page;
   const isAuthenticated = useIsAuthenticated();
+  const users = data !== undefined && data.length > 0 ? data : [];
 
-  useEffect(()=>{
-    getUsers();
-  },[])
 
   return (
     <TableContainer component={Paper} >
@@ -42,8 +38,8 @@ export default function UsersTable(_props: any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.length > 0
-            ? data.map((user: any) => (
+          {users.length > 0
+            ? users.map((user: any) => (
               <TableRow key={user._id}>
                 <TableCell>{user.firstname}</TableCell>
                 <TableCell>{user.lastname}</TableCell>

@@ -1,6 +1,6 @@
 import hasLength from "shared/hooks/useForm/validators/hasLength"
 
-const loginForm = {
+const loginForm: Object = {
     field: {
         username: "",
         password: "",

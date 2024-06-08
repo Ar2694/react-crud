@@ -12,7 +12,7 @@ import LoginService from 'api/services/LoginService/LoginService';
 import { FormHelperText } from '@mui/material';
 import PageProvider, { usePageContext } from 'contexts/PageContext';
 import useForm, { compareValues, validateAllFields, validateField } from 'shared/hooks/useForm';
-import registerForm from 'shared/hooks/useForm/validations/registerForm';
+import registerForm from 'shared/hooks/useForm/forms/registerForm';
 import RegisterConfirmDialog from 'shared/dialogs/RegisterConfirmDialog';
 
 export default function RegisterPage() {

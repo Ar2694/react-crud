@@ -30,7 +30,7 @@ export default class FetchClient {
       this.resp = await fetch(url, requestInit);
       this.respBody = await this.resp.json();
 
-      return this;
+      return FetchClient;
     }
     catch (error) {
       console.log(error);

@@ -33,7 +33,7 @@ function ResetConfirmContent() {
                     <CheckCircleIcon color="success"/>
                 </Grid>
                 <Typography className="title" gutterBottom={true}>
-                    Your password has reset!
+                    Your password is reset!
                 </Typography>
                 <Grid
                     container

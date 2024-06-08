@@ -1,6 +1,6 @@
 import hasLength from "shared/hooks/useForm/validators/hasLength"
 
-const resetPasswordForm = {
+const resetPasswordForm: Object = {
     field: {
         password: "",
         confirmPassword: ""
