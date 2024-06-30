@@ -9,25 +9,28 @@ import DeleteModal from 'shared/modals/DeleteModal';
 import EditModal from 'shared/modals/EditModal';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { usePageContext } from 'contexts/PageContext';
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 
+import sx from "./sx";
 
 export default function UsersTable(_props: any) {
-  const { page} = usePageContext();
-  const { data } = page;
+
+  const { page, pagination } = usePageContext();
+  const { data, sort } = pagination ?? {}
+
   const isAuthenticated = useIsAuthenticated();
   const users = data !== undefined && data.length > 0 ? data : [];
 
-
   return (
-    <TableContainer component={Paper} >
+    <TableContainer sx={sx} component={Paper} >
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>First Name</TableCell>
-            <TableCell>Last Name</TableCell>
-            <TableCell>Phone Number</TableCell>
-            <TableCell>Address</TableCell>
-            <TableCell>Email</TableCell>
+            <TableCell>First Name <SwapVertIcon className="sort-icon" onClick={() => sort("firstname")} /></TableCell>
+            <TableCell>Last Name <SwapVertIcon className="sort-icon" onClick={() => sort("lastname")}/></TableCell>
+            <TableCell>Phone Number <SwapVertIcon className="sort-icon" onClick={() => sort("phoneNumber")}/></TableCell>
+            <TableCell>Address <SwapVertIcon className="sort-icon" onClick={() => sort("address")}/></TableCell>
+            <TableCell>Email <SwapVertIcon className="sort-icon" onClick={() => sort("email")}/></TableCell>
             {isAuthenticated &&
               <>
                 <TableCell></TableCell>
@@ -49,7 +52,7 @@ export default function UsersTable(_props: any) {
                 {isAuthenticated &&
                   <>
                     <TableCell><EditModal user={user} /></TableCell>
-                    <TableCell><DeleteModal id={user._id}/></TableCell>
+                    <TableCell><DeleteModal id={user._id} /></TableCell>
                   </>
                 }
               </TableRow>))

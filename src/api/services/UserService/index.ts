@@ -10,16 +10,16 @@ export default class UserService {
   }
 
   // getUsers
-  getUsers = async () => {
-    const _get = await APIClient.get(`${this.baseURI}/`)
+  getUsers = async (pagination:any) => {
+    const _get = await APIClient.post(`${this.baseURI}/`, pagination)
     return _get.data;
   }
 
-  // searchUsers
-  searchUsers = async (query: any) => {
-    const _get = await APIClient.get(`${this.baseURI}/search/${query}`)
-    return _get.data;
-  }
+    // findAllUsers
+    findAllUsers = async () => {
+      const _get = await APIClient.get(`${this.baseURI}/`)
+      return _get.data;
+    }
 
   // findAUser
   findAUser = async (id: string) => {
@@ -44,7 +44,7 @@ export default class UserService {
       email: user.email
     }
 
-    const _post = await APIClient.post(`${this.baseURI}/`, newUser);
+    const _post = await APIClient.post(`${this.baseURI}/create`, newUser);
     return _post;
   }
 
@@ -68,17 +68,16 @@ export default class UserService {
   }
 
   // getUsers
-  static getUsers = async () => {
-    const _get = await UserService.init().getUsers();
+  static getUsers = async (pagination?:any) => {
+    const _get = await UserService.init().getUsers(pagination);
     return _get;
   }
 
-  // getUsers
-  static searchUsers = async (query: any) => {
-    const _get = await UserService.init().searchUsers(query);
+  // findAllUsers
+  static findAllUsers = async () => {
+    const _get = await UserService.init().findAllUsers();
     return _get;
   }
-
 
   // findAUser
   static findAUser = async (id: string) => {

@@ -1,4 +1,3 @@
-import UserService from "api/services/UserService";
 import React, { useContext, useEffect, useState } from "react";
 
 const PageContext = React.createContext<any | null>(null);
@@ -6,21 +5,23 @@ const PageContext = React.createContext<any | null>(null);
 export default function PageProvider(props: any) {
     const [page, setPage] = useState({});
 
-    const setData =(data:any)=>{
+    const setApi =(data:any)=>{
+        setPage((prev: any) => ({ ...prev, data: data }));
+    }
+    const setData = async (api?: any) => {
+        const data = await api();
         setPage((prev: any) => ({ ...prev, data: data }));
     }
     const context = {
+        pagination: props.pagination instanceof Object ? props.pagination : null,
         functions: props.functions instanceof Function ? props.functions(page, setPage) : () => { },
         page,
         setPage,
-        setData
+        setApi
     }
     useEffect(() => {
         if (props.data instanceof Promise) {
-            (async () => {
-                const data = await props.data;
-                setData(data);
-            })();
+            setApi(props.data);
         }
     }, [])
 

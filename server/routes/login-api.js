@@ -82,12 +82,10 @@ router.post("/find-username", async (req, res) => {
 router.post("/register", async (req, res) => {
   try {
     //filtering criteria to identify a record within MongoDB
-
     const user = await Login.findOne({ username: req.body.username });
-    console.log(req.body, "user user")
+
     if (user) {
       //if username exists, this error will show
-      console.log(user, "user user if")
       const userAlreadyExistsErrorResponse = new ErrorResponse(302, "Username is already taken.", user, true);
       return res.status(302).send(userAlreadyExistsErrorResponse.toObject());
     } else {
@@ -101,9 +99,9 @@ router.post("/register", async (req, res) => {
         username: req.body.username,
         password: hashedPassword,
       }
-      console.log(user, "should create user")
+   
       const createUser = await Login.create(loginInfo);
-      console.log(createUser, "create user")
+
       if (createUser) {
         const registeredUserResponse = new BaseResponse(200, "Query Successful", user);
         return res.json(registeredUserResponse.toObject());
@@ -128,7 +126,7 @@ router.post("/register", async (req, res) => {
 router.put("/forgot-password", async (req, res) => {
   try {
     const user = await Login.findOne({ username: req.body.username });
-    console.log( req.body, " req.body")
+
     if (user) {
 
       const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);

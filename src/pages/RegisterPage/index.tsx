@@ -21,13 +21,13 @@ export default function RegisterPage() {
     onSubmit: async (form: any) => {
       const { field } = form;
       let isFormValid = validateAllFields(field, form);
-      console.log(field, " fields")
+
       if (!isFormValid) {
         const isMatch = compareValues({password: field.password, confirmPassword: field.confirmPassword})
-        console.log(isMatch, "isMatch passwords")
+  
         if (isMatch) {
+          
           const result = await LoginService.init().register(field);
-          console.log(result, "result register")
           if (result.data === null && result.isOk) {
 
             _setPage({isError: false, dialog: <RegisterConfirmDialog /> })

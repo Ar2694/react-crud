@@ -12,8 +12,9 @@ import EditIcon from '@mui/icons-material/Edit';
 
 export default function EditModal(props: any) {
     const button = props.button ?? <EditIcon color="secondary" />;
-    const { functions: pageFunc, setData } = usePageContext();
-
+    const { pagination } = usePageContext();
+    const { refresh } = pagination ?? {};
+    
     const functions = (_state: any, _setState: any) => ({
         user: props.user,
         onSubmit: async (form: any, close: any) => {
@@ -24,8 +25,7 @@ export default function EditModal(props: any) {
                 const result = await UserService.updateUser(field);
 
                 if (result && result.isOk && result.data.acknowledged) {
-                    const users = await UserService.getUsers();
-                    setData(users);
+                    refresh()
                     close();
                 } else {
                     _setState({ isError: true, error: "Sorry! Something went wrong..." })
@@ -53,7 +53,7 @@ export function EditModalContent() {
     const { onChange, user, onSubmit } = functions;
     const form = useForm(editModalForm(user));
     const { field, validate } = form;
-    console.log(form)
+
     return (
         <Modal className="modal edit-modal" open={modal}>
             <Box>

@@ -11,15 +11,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function DeleteModal(props: any) {
     const button = props.button ?? <DeleteIcon color="secondary"/>;
-    const { functions: pageFunc, setData } = usePageContext();
+    const { pagination} = usePageContext();
+    const { refresh } = pagination ?? {};
 
     const functions = (_state: any, _setState: any) => ({
         onDelete: async () => {
             const result = await UserService.deleteUser(props.id);
 
             if (result && result.isOk && result.data.acknowledged) {
-                const users = await UserService.getUsers();
-                setData(users);
+                refresh();
                 close();
             } else {
                 _setState({ isError: true, error: "Sorry! Something went wrong..." })

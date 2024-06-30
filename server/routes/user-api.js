@@ -3,7 +3,8 @@ const express = require("express");
 const User = require("../models/user-model.js");
 const BaseResponse = require("../services/base-response.js");
 const ErrorResponse = require("../services/error-response.js");
-const searchPipeline = require("../pipelines/search-pipeline.js");
+const userSearch = require("../pipeline/userSearch.js");
+const userSort = require("../pipeline/userSort.js");
 
 //It defines router variables - configuration
 const router = express.Router();
@@ -12,29 +13,32 @@ const router = express.Router();
 
 // ============================================================================================================================
 
+
 /**
- * FindBySearch API
+ * FindUsers with aggregation API
  */
-router.get("/search/", async (req, res) => {
+
+router.post("/", async (req, res) => {
   try {
-    const users = await User.find({});
+    const { sort, search } = req.body;
+    let pipeline = [];
+    let users = null;
+
+    if (search.length > 0) {
+      pipeline.push(userSearch(search))
+    }
+    if (Object.keys(sort).length > 0) {
+      pipeline.push(userSort(sort))
+    }
+
+    if (pipeline.length > 0) {
+      console.log(pipeline)
+      users = await User.aggregate(pipeline);
+    } else {
+      users = await User.find({});
+    }
+
     const findBySearchResponse = new BaseResponse(200, "Query Successful", users);
-
-    return res.json(findBySearchResponse.toObject());
-    
-  } catch (e) {
-    const findBySearchErrorResponse = new ErrorResponse(500, "Internal Server Error", e.message);
-    return res.status(500).send(findBySearchErrorResponse.toObject());
-  }
-});
-
-router.get("/search/:query", async (req, res) => {
-  try {
-    const query = req.params.query;
-    const pipeline = searchPipeline(query);
-    const users = await User.aggregate(pipeline);
-    const findBySearchResponse = new BaseResponse(200, "Query Successful", users);
-
     return res.json(findBySearchResponse.toObject());
 
   } catch (e) {
@@ -44,15 +48,14 @@ router.get("/search/:query", async (req, res) => {
 });
 
 // ============================================================================================================================
-
 /**
  * FindAll API
  */
+
 router.get("/", async (req, res) => {
   try {
     const users = await User.find({});
     const findAllResponse = new BaseResponse(200, "Query Successful", users);
-
     return res.json(findAllResponse.toObject());
 
   } catch (err) {
@@ -83,7 +86,7 @@ router.get("/:id", async (req, res) => {
 /**
  *  CreateUser API
  */
-router.post("/", async (req, res) => {
+router.post("/create", async (req, res) => {
   try {
     const newUser = {
       firstname: req.body.firstname,

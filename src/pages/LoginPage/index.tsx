@@ -53,7 +53,6 @@ export default function LoginPage() {
 
           } catch (e) {
             _setPage({ isError: true, error: "Sorry! Something went wrong..." })
-            console.log(e);
           }
         } else {
           _setPage({ isError: true, error: "*Invalid username or password." })

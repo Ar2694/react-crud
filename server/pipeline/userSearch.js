@@ -1,5 +1,6 @@
-const searchPipeline = (search) => [
-  {
+const userSearch = (search) => {
+
+  return {
     $search: {
       index: "reactCrudUsers",
       compound: {
@@ -42,7 +43,10 @@ const searchPipeline = (search) => [
         ],
       },
     },
-  },
-];
+  }
 
-module.exports = searchPipeline;
+
+}
+
+
+module.exports = userSearch;

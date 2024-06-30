@@ -9,23 +9,10 @@ import UserService from 'api/services/UserService';
 import { usePageContext } from 'contexts/PageContext';
 import createModalForm from 'shared/hooks/useForm/forms/createModalForm';
 
-
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
 export default function CreateModal(props: any) {
     const button = props.button ?? <Button variant="contained" color="secondary" fullWidth>Create User</Button>;
-    const { functions: pageFunc, setData } = usePageContext();
-    const { getUsers } = pageFunc;
+    const { pagination } = usePageContext();
+    const { refresh } = pagination ?? {};
 
     const functions = (_state: any, _setState: any) => ({
 
@@ -38,8 +25,7 @@ export default function CreateModal(props: any) {
                 const result = await UserService.createUser(field);
 
                 if (result && result.isOk) {
-                    const users = await UserService.getUsers();
-                    setData(users);
+                    refresh();
                     close();
                 } else {
                     _setState({ isError: true, error: "Sorry! Something went wrong..." })
@@ -70,7 +56,7 @@ function CreateModalContent() {
 
     return (
         <Modal className="modal create-modal" open={modal}>
-            <Box sx={style} >
+            <Box>
                 <Typography id="id-id-title" variant='h5' gutterBottom={true}>
                     Create A User
                 </Typography>
